@@ -54,9 +54,17 @@ public class MainCharacter{
 
 		xVel = data.xVel;
 		yVel = data.yVel;
-		
-		width = 50;
-		height = 50;
+
+		switch (data.type) {
+			case SPEEDO:
+				width = CharacterObj.SPEEDO_WIDTH;
+				height = CharacterObj.SPEEDO_HEIGHT;
+				break;
+			case TANK:
+				width = CharacterObj.TANK_WIDTH;
+				height = CharacterObj.TANK_HEIGHT;
+				break;
+		}
 		
 		id = data.id;
 		

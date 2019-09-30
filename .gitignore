@@ -4,8 +4,15 @@ MultiPlayerServer/bin
 MultiPlayerServer/.settings
 MultiPlayerServer/.project
 MultiPlayerServer/.classpath
+MultiPlayerServer/.idea
 
 MultiPlayerClient/.settings
 MultiPlayerClient/.project
 MultiPlayerClient/.classpath
+MultiPlayerClient/.idea
+
+.idea
+*.class
+*.iml
+
 

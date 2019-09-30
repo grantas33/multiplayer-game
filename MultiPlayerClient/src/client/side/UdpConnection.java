@@ -63,7 +63,7 @@ class UdpConnection implements Runnable {
 						ByteArrayInputStream bais = new ByteArrayInputStream(packet.getData());
 						ObjectInputStream ois = new ObjectInputStream(bais);
 						data = (String) ois.readObject();
-						System.err.println(data);
+						// System.err.println(data);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 						continue;

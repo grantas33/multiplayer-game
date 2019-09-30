@@ -2,9 +2,16 @@ package client.side;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.side.enumerators.GamePhase;
+import client.side.enumerators.SpaceshipType;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,6 +21,11 @@ import org.lwjgl.opengl.DisplayMode;
 import client.side.models.Box;
 import client.side.models.Bullet;
 import client.side.models.CharacterObj;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.opengl.TextureImpl;
 
 /**
  * 
@@ -44,6 +56,9 @@ public class Main {
 	private List<Box> obstacles;
 	private List<Box> movingObjects; // all players and bullets. We get this from server
 	private Box updatedCharacter; // clients character that we get from server
+
+    private UnicodeFont uf = null; // default font for rendering text
+    private GamePhase gamePhase = GamePhase.SPACESHIP_SELECT; // current game phase
 
 	private Camera camera;
 	
@@ -97,10 +112,18 @@ public class Main {
 		
 		obstacles = connections.getMapDetails();
 
-		character = new CharacterObj(0, 0, ID);
 		bullets = new ArrayList<Bullet>();
 		camera = new Camera(0, 0);
 		movingObjects = new ArrayList<Box>();
+
+        try {
+            uf = new UnicodeFont("fonts/Mansalva-Regular.ttf", 50, false, false);
+            uf.getEffects().add(new ColorEffect(Color.WHITE)); // set the default color to white
+            uf.addAsciiGlyphs();
+            uf.loadGlyphs(); // load glyphs from font file
+        } catch (SlickException exception) {
+            exception.printStackTrace();
+        }
 
 		new Thread(new UdpConnection(this, connections, client_port_udp)).start();
 	}
@@ -110,22 +133,59 @@ public class Main {
 
 		while (!Display.isCloseRequested()) {
 
-			glClear(GL_COLOR_BUFFER_BIT);
+		 	glClear(GL_COLOR_BUFFER_BIT);
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 				closingOperations();
 			}
 
-			handlingEvents();
-			sendCharacter();
-			update();
-			render();
+            switch (gamePhase) {
+                case SPACESHIP_SELECT:
+                    spaceshipSelectGamePhaseLoop();
+                case LIVE_MATCH:
+                    liveMatchGamePhaseLoop();
+            }
 
-			Display.update();
+		 	Display.update();
 			Display.sync(FRAMES_PER_SECOND);
 		}
 		closingOperations();
 	}
+
+	private void spaceshipSelectGamePhaseLoop() {
+        Box speedo = new Box(100, 200, CharacterObj.SPEEDO_WIDTH, CharacterObj.SPEEDO_HEIGHT, 255, 255, 255, 0, 0);
+        Box tank = new Box(400, 200, CharacterObj.TANK_WIDTH, CharacterObj.TANK_HEIGHT, 100, 100, 100, 0, 0);
+
+        SpaceshipType selectedType = null;
+
+        drawSquare(speedo);
+        drawSquare(tank);
+        drawText(100, 100, "Speedo");
+        drawText(400, 100, "Tank");
+        TextureImpl.bindNone();
+
+        selectedType = pollInputForSpaceshipType();
+        if (selectedType != null) {
+            switch (selectedType) {
+                case SPEEDO:
+                    character = new CharacterObj(0, 0, SpaceshipType.SPEEDO, ID);
+                    break;
+                case TANK:
+                    character = new CharacterObj(0, 0, SpaceshipType.TANK, ID);
+                    break;
+            }
+            gamePhase = GamePhase.LIVE_MATCH;
+        }
+    }
+
+    private void liveMatchGamePhaseLoop() {
+	    if (character != null) {
+            handlingEvents();
+            sendCharacter();
+            update();
+            render();
+        }
+    }
 
 	
 	/** Updating camera's position */
@@ -150,6 +210,10 @@ public class Main {
 		}
 	}
 
+	private void drawText(float x, float y, String text) {
+		uf.drawString(x, y, text);
+	}
+
 	/** Function to draw square */
 	private void drawSquare(Box box) {
 
@@ -160,6 +224,22 @@ public class Main {
 			glVertex2f(box.x + box.w, box.y + box.h);
 			glVertex2f(box.x, box.y + box.h);
 		glEnd();
+	}
+
+	private SpaceshipType pollInputForSpaceshipType() {
+		if (Mouse.isButtonDown(0)) {
+			int x = Mouse.getX();
+			int y = Mouse.getY();
+
+            System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
+
+			if(x >= 100 && x <=100 + CharacterObj.SPEEDO_WIDTH && y <=250 + CharacterObj.SPEEDO_HEIGHT && y >= 250) {
+				return SpaceshipType.SPEEDO;
+			} else if (x >= 400 && x <= 400 + CharacterObj.TANK_WIDTH && y <= 200 + CharacterObj.TANK_HEIGHT && y >= 200) {
+			    return SpaceshipType.TANK;
+            }
+		}
+        return null;
 	}
 
 	/** Function to send main characters data to server */
