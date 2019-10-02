@@ -10,6 +10,7 @@ import java.util.List;
 
 import client.side.enumerators.GamePhase;
 import client.side.enumerators.SpaceshipType;
+import client.side.factory.CharacterObjFactory;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -153,27 +154,23 @@ public class Main {
 	}
 
 	private void spaceshipSelectGamePhaseLoop() {
-        Box speedo = new Box(100, 200, CharacterObj.SPEEDO_WIDTH, CharacterObj.SPEEDO_HEIGHT, 255, 255, 255, 0, 0);
-        Box tank = new Box(400, 200, CharacterObj.TANK_WIDTH, CharacterObj.TANK_HEIGHT, 100, 100, 100, 0, 0);
+        Box speedo = new Box(100, 200, CharacterObjFactory.SPEEDO_WIDTH, CharacterObjFactory.SPEEDO_HEIGHT, 255, 255, 255, 0, 0);
+        Box tank = new Box(300, 200, CharacterObjFactory.TANK_WIDTH, CharacterObjFactory.TANK_HEIGHT, 100, 100, 100, 0, 0);
+        Box cruiser = new Box(500, 200, CharacterObjFactory.CRUISER_WIDTH, CharacterObjFactory.CRUISER_HEIGHT, 100, 100, 100, 0, 0);
 
         SpaceshipType selectedType = null;
 
         drawSquare(speedo);
         drawSquare(tank);
+        drawSquare(cruiser);
         drawText(100, 100, "Speedo");
-        drawText(400, 100, "Tank");
+        drawText(300, 100, "Tank");
+        drawText(500, 100, "Cruiser");
         TextureImpl.bindNone();
 
         selectedType = pollInputForSpaceshipType();
         if (selectedType != null) {
-            switch (selectedType) {
-                case SPEEDO:
-                    character = new CharacterObj(0, 0, SpaceshipType.SPEEDO, ID);
-                    break;
-                case TANK:
-                    character = new CharacterObj(0, 0, SpaceshipType.TANK, ID);
-                    break;
-            }
+        	character = CharacterObjFactory.createCharacterObj(selectedType, ID);
             gamePhase = GamePhase.LIVE_MATCH;
         }
     }
@@ -233,11 +230,13 @@ public class Main {
 
             System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
 
-			if(x >= 100 && x <=100 + CharacterObj.SPEEDO_WIDTH && y <=250 + CharacterObj.SPEEDO_HEIGHT && y >= 250) {
+			if(x >= 100 && x <=100 + CharacterObjFactory.SPEEDO_WIDTH && y <=250 + CharacterObjFactory.SPEEDO_HEIGHT && y >= 250) {
 				return SpaceshipType.SPEEDO;
-			} else if (x >= 400 && x <= 400 + CharacterObj.TANK_WIDTH && y <= 200 + CharacterObj.TANK_HEIGHT && y >= 200) {
+			} else if (x >= 300 && x <= 300 + CharacterObjFactory.TANK_WIDTH && y <= 200 + CharacterObjFactory.TANK_HEIGHT && y >= 200) {
 			    return SpaceshipType.TANK;
-            }
+            } else if (x >= 500 && x <= 500 + CharacterObjFactory.CRUISER_WIDTH && y <= 200 + CharacterObjFactory.CRUISER_HEIGHT && y >= 200) {
+				return SpaceshipType.CRUISER;
+			}
 		}
         return null;
 	}

@@ -35,7 +35,8 @@ public class MainCharacter{
 	private int xVel;
 	private int yVel;
 	
-	private int xp;				
+	private int hp;
+	private int fullHp;
 	
 	/** Constructor for new player
 	 * 
@@ -54,24 +55,13 @@ public class MainCharacter{
 
 		xVel = data.xVel;
 		yVel = data.yVel;
-
-		switch (data.type) {
-			case SPEEDO:
-				width = CharacterObj.SPEEDO_WIDTH;
-				height = CharacterObj.SPEEDO_HEIGHT;
-				break;
-			case TANK:
-				width = CharacterObj.TANK_WIDTH;
-				height = CharacterObj.TANK_HEIGHT;
-				break;
-		}
-		
+		width = data.width;
+		height = data.height;
+		hp = data.hp;
+		fullHp = data.hp;
 		id = data.id;
-		
+
 		bullets = Collections.synchronizedList(new ArrayList<ServerBullet>());
-			
-		xp = 100;
-		
 		addBullets(data.newBullets);
 	}
 	
@@ -150,12 +140,12 @@ public class MainCharacter{
 		}
 		
 		//if xp is below 1 we reset player to its initial position
-		if (xp < 1){
+		if (hp < 0){
 			x = y = 0;
-			xp = 100;
+			hp = fullHp;
 		}
 		
-		boxes.add(new Box(x, y, width, height, r, g, b, id, xp));
+		boxes.add(new Box(x, y, width, height, r, g, b, id, hp));
 		return boxes;
 	}
 
@@ -247,7 +237,7 @@ public class MainCharacter{
 					continue;
 				if (collision(x, y, x + width, y + height,
 						mc.x, mc.y, mc.x + mc.width, mc.y + mc.height)){
-					mc.xp -= 30;
+					mc.hp -= 30;
 					return true;
 				}
 			}

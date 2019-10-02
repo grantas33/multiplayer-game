@@ -13,7 +13,7 @@ public class Box{
 	public int w;
 	public int h;
 	
-	public int xp;
+	public int hp;
 	
 	public float r;
 	public float g;
@@ -23,7 +23,7 @@ public class Box{
 	
 	public Box(){}
 
-	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int xp) {
+	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int hp) {
 		this.r = r;
 		this.b = b;
 		this.g = g;
@@ -34,8 +34,6 @@ public class Box{
 		this.h = height;
 		
 		this.id= id;
-		this.xp = xp;
+		this.hp = hp;
 	}
-	
-	
 }

@@ -1,7 +1,6 @@
 package client.side.models;
 
 import client.side.enumerators.SpaceshipType;
-import org.newdawn.slick.util.pathfinding.navmesh.Space;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,15 +11,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CharacterObj{
-
-	public static final int SPEEDO_WIDTH = 50;
-	public static final int SPEEDO_HEIGHT = 50;
-	public static final int TANK_WIDTH = 100;
-	public static final int TANK_HEIGHT = 100;
+public class CharacterObj implements Serializable{
 
 	public int xVel;
 	public int yVel;
+
+	public int hp;
+	public int width;
+	public int height;
 
 	public SpaceshipType type;
 	
@@ -29,13 +27,14 @@ public class CharacterObj{
 	public List<Bullet> newBullets;
 	
 	public CharacterObj(){}
-	
-	public CharacterObj(int xVel, int yVel, SpaceshipType type, long id) {
-		
+
+	public CharacterObj(int xVel, int yVel, SpaceshipType type, long id, int hp, int width, int height) {
 		this.xVel = xVel;
 		this.yVel = yVel;
 		this.type = type;
 		this.id = id;
+		this.hp = hp;
+		this.height = height;
+		this.width = width;
 	}
-
 }
