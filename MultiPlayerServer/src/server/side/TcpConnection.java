@@ -25,10 +25,12 @@ class TcpConnection implements Runnable{
 
 	private Main main;
 	private Socket socket;
-	
+	private UdpConnection udpConnection;
+
 	TcpConnection(Main main, Socket socket) {
 		this.main = main;
 		this.socket = socket;
+		this.udpConnection = UdpConnection.getInstance();
 	}
 	
 	@Override
@@ -65,7 +67,7 @@ class TcpConnection implements Runnable{
 						String ipString = socket.getInetAddress().getHostName();
 						InetAddress clientIp = InetAddress.getByName(ipString);
 						System.err.println(ipString + " " + clientIp);
-						main.addressBook(clientIp, sm.port);
+						udpConnection.attach(new Main.IpPort(clientIp, sm.port));
 						break;
 					case REMOVE_CHARACTER:
 						main.removeCharacter(sm.id);

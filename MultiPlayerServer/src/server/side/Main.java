@@ -2,31 +2,22 @@ package server.side;
 
 
 import server.side.Helper.WrapperList;
+import server.side.interfaces.ObserverInterface;
 import server.side.models.Box;
 import server.side.models.CharacterObj;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.xml.bind.JAXBException;
 
 
 public class Main {
@@ -42,13 +33,12 @@ public class Main {
 	
 	//thread safe array because while one thread is reading another
 	//might add delete some entries
-	private CopyOnWriteArrayList<IpPort> activeClients;
 	private Vector<MainCharacter> fullCharacters;
 
 	private WrapperList tiles;
 	private WrapperList gamePlay;
 	
-	private UdpConnectionsSend udpSend;
+	private UdpConnection udpSend;
 	
 	public static void main(String[] args) {
 		
@@ -62,10 +52,9 @@ public class Main {
 	public Main(int tcpPort){
 		
 		SERVER_PORT_TCP = tcpPort;
-		activeClients = new CopyOnWriteArrayList<IpPort>();
 		tiles = new WrapperList();
 		gamePlay = new WrapperList();
-		udpSend = new UdpConnectionsSend();
+		udpSend = UdpConnection.getInstance();
 		fullCharacters = new Vector<MainCharacter>();
 	}
 
@@ -104,7 +93,7 @@ public class Main {
 			@Override
 			public void run() {
 				updateGamePlay();
-				udpSend.sendGamePlay();
+				udpSend.sendGamePlay(gamePlay);
 			}
 
 			private void updateGamePlay() {
@@ -157,59 +146,30 @@ public class Main {
 		}
 	}
 	
-
-	void addressBook(InetAddress address, int port){
-		activeClients.add(new IpPort(address, port));
-	}
-	
-	private static class IpPort{
+	public static class IpPort implements ObserverInterface {
 		
 		InetAddress address;
 		int port;
 		
-		public IpPort(InetAddress address, int port){	
+		IpPort(InetAddress address, int port){
 			this.address = address;
 			this.port = port;
 		}
-	} 
+
+		@Override
+		public void update(DatagramPacket packet) {
+			packet.setAddress(this.address);
+			packet.setPort(this.port);
+			try {
+				UdpConnection.getInstance().gamePlaySocket.send(packet);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public WrapperList getMap(){
 		return tiles;
 	}
-	
-	private class UdpConnectionsSend{
-		
-		DatagramSocket gamePlaySocket;
-		
-		public UdpConnectionsSend() {
-			
-			try {
-				gamePlaySocket = new DatagramSocket();
-			} catch (SocketException e) {
-				e.printStackTrace();
-			}
-		}
-		public void sendGamePlay() {
-			
-			try{
-				
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ObjectOutputStream oos = new ObjectOutputStream(baos);
-				oos.writeObject(Helper.marshall(gamePlay));
-				byte [] bytes = baos.toByteArray();
-				DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
-				
-				for (IpPort dest : activeClients){
-					packet.setAddress(dest.address);
-					packet.setPort(dest.port);
-					gamePlaySocket.send(packet);
-					packet.setData(bytes);
-					packet.setLength(bytes.length);
-				}
-				
-			}catch (IOException | JAXBException e) {
-			
-			}
-		}
-	}
+
 }
