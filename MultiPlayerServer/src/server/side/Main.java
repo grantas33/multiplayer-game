@@ -2,11 +2,11 @@ package server.side;
 
 
 import server.side.Helper.WrapperList;
+import server.side.factory.MainCharacterFactory;
 import server.side.models.Box;
 import server.side.models.CharacterObj;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,9 +17,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -140,7 +138,7 @@ public class Main {
 			}
 		}
 		//if it is new character then we add it to the list
-		MainCharacter newMc = new MainCharacter(data);
+		MainCharacter newMc = MainCharacterFactory.createMainCharacter(data);
 		fullCharacters.add(newMc);
 	}
 	
