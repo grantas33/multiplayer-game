@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import server.side.enumerators.SpaceshipType;
 import server.side.models.Box;
 import server.side.models.Bullet;
 import server.side.models.CharacterObj;
@@ -25,7 +26,7 @@ public class MainCharacter{
 	private int y;
 	private int width;
 	private int height;
-	
+	private SpaceshipType type;
 	//Thread safe list because bullets can be updated while 
 	//iterating them which would resolve in an error.
 	private List<ServerBullet> bullets;
@@ -37,13 +38,17 @@ public class MainCharacter{
 	
 	private int hp;
 	private int fullHp;
-	
-	/** Constructor for new player
-	 * 
-	 * @param data This is data that we get from client side and put on the server side
-	 * to simulate game.
+
+
+	/**
+	 *
+	 * @param width
+	 * @param height
+	 * @param hp
+	 * @param id
+	 * @param newBullets
 	 */
-	MainCharacter(CharacterObj data) {
+	public MainCharacter(int width, int height, int hp, long id, List<Bullet> newBullets) {
 		
 		x = 0;
 		y = 0;
@@ -53,16 +58,16 @@ public class MainCharacter{
 		b = randomFloat.nextFloat();
 		g = randomFloat.nextFloat();
 
-		xVel = data.xVel;
-		yVel = data.yVel;
-		width = data.width;
-		height = data.height;
-		hp = data.hp;
-		fullHp = data.hp;
-		id = data.id;
+		xVel = 0;
+		yVel = 0;
+		this.width = width;
+		this.height = height;
+		this.hp = hp;
+		fullHp = hp;
+		this.id = id;
 
 		bullets = Collections.synchronizedList(new ArrayList<ServerBullet>());
-		addBullets(data.newBullets);
+		addBullets(newBullets);
 	}
 	
 	/**

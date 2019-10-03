@@ -15,26 +15,17 @@ public class CharacterObj implements Serializable{
 
 	public int xVel;
 	public int yVel;
-
-	public int hp;
-	public int width;
-	public int height;
-
 	public SpaceshipType type;
-
 	public long id;
 	
 	public List<Bullet> newBullets;
 	
 	public CharacterObj(){}
 
-	public CharacterObj(int xVel, int yVel, SpaceshipType type, long id, int hp, int width, int height) {
+	public CharacterObj(int xVel, int yVel, SpaceshipType type, long id) {
 		this.xVel = xVel;
 		this.yVel = yVel;
 		this.type = type;
 		this.id = id;
-		this.hp = hp;
-		this.height = height;
-		this.width = width;
 	}
 }

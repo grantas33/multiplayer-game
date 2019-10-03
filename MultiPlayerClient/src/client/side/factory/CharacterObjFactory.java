@@ -22,13 +22,13 @@ public class CharacterObjFactory {
         CharacterObj character;
         switch (type) {
             case SPEEDO:
-                character = new CharacterObj(0, 0, SPEEDO, id, 100, SPEEDO_WIDTH, SPEEDO_HEIGHT);
+                character = new CharacterObj(0, 0, SPEEDO, id);
                 break;
             case TANK:
-                character = new CharacterObj(0, 0, TANK, id, 300, TANK_WIDTH, TANK_HEIGHT);
+                character = new CharacterObj(0, 0, TANK, id);
                 break;
             case CRUISER:
-                character = new CharacterObj(0, 0, CRUISER, id, 200, CRUISER_WIDTH, CRUISER_HEIGHT);
+                character = new CharacterObj(0, 0, CRUISER, id);
                 break;
             default:
                 throw new InvalidParameterException("Spaceship type doesn't exist.");
