@@ -1,4 +1,4 @@
-package strategy;
+package client.side.strategy;
 
 public class Slow extends Strategy {
     @Override

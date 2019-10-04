@@ -3,16 +3,12 @@ package client.side;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import client.side.enumerators.GamePhase;
 import client.side.enumerators.SpaceshipType;
 import client.side.factory.CharacterObjFactory;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -23,13 +19,12 @@ import client.side.models.Box;
 import client.side.models.Bullet;
 import client.side.models.CharacterObj;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.opengl.TextureImpl;
-import strategy.Bolt;
-import strategy.Runner;
-import strategy.Slow;
+import client.side.strategy.Bolt;
+import client.side.strategy.Runner;
+import client.side.strategy.Slow;
 
 /**
  * 

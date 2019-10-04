@@ -1,7 +1,7 @@
 package client.side.models;
 
 import client.side.enumerators.SpaceshipType;
-import strategy.Strategy;
+import client.side.strategy.Strategy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
