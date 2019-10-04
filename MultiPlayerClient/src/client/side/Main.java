@@ -27,6 +27,9 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.opengl.TextureImpl;
+import strategy.Bolt;
+import strategy.Runner;
+import strategy.Slow;
 
 /**
  * 
@@ -66,6 +69,7 @@ public class Main {
 	private String server_ip;
 	private int server_port_tcp;
 	private int client_port_udp;
+	private int counter;
 	
 	public static void main(String[] args) {
 		
@@ -104,7 +108,6 @@ public class Main {
 
 	/** Setting up screen, establishing connections (TCP, UPD) with server, etc. */
 	private void init() {
-
 		connections = new TcpConnection(this, server_ip, server_port_tcp);
 
 		if ((ID = connections.getIdFromServer()) == -1) {
@@ -117,7 +120,7 @@ public class Main {
 		camera = new Camera(0, 0);
 		movingObjects = new ArrayList<Box>();
 
-        try {
+		try {
             uf = new UnicodeFont("fonts/Mansalva-Regular.ttf", 50, false, false);
             uf.getEffects().add(new ColorEffect(Color.WHITE)); // set the default color to white
             uf.addAsciiGlyphs();
@@ -171,7 +174,16 @@ public class Main {
         selectedType = pollInputForSpaceshipType();
         if (selectedType != null) {
         	character = CharacterObjFactory.createCharacterObj(selectedType, ID);
-            gamePhase = GamePhase.LIVE_MATCH;
+
+        	Bolt bolt = new Bolt();
+			Runner runner = new Runner();
+			Slow slow = new Slow();
+			character.addStrategy(bolt);
+			character.addStrategy(runner);
+			character.addStrategy(slow);
+			counter = 0;
+
+			gamePhase = GamePhase.LIVE_MATCH;
         }
     }
 
@@ -283,7 +295,6 @@ public class Main {
 	private void handlingEvents() {
 
 		if (Display.isActive()) { // if display is focused events are handled
-			
 			// new bullets shot
 			while (Mouse.next()) {
 				
@@ -304,13 +315,14 @@ public class Main {
 				}
 			}
 			
-			// character's moves
+			// character's moves and change speed
 			while (Keyboard.next()) {
+				int speedIndicator = character.speedIndicator();
 
 				if (Keyboard.getEventKey() == Keyboard.KEY_W
 						|| Keyboard.getEventKey() == Keyboard.KEY_UP) {
 					if (Keyboard.getEventKeyState()) {
-						character.yVel = -5;
+						character.yVel = -5 * speedIndicator;
 						up = true;
 					} else {
 						up = false;
@@ -322,7 +334,7 @@ public class Main {
 				if (Keyboard.getEventKey() == Keyboard.KEY_S
 						|| Keyboard.getEventKey() == Keyboard.KEY_DOWN) {
 					if (Keyboard.getEventKeyState()) {
-						character.yVel = 5;
+						character.yVel = 5 * speedIndicator;
 						down = true;
 					} else {
 						down = false;
@@ -334,7 +346,7 @@ public class Main {
 				if (Keyboard.getEventKey() == Keyboard.KEY_D
 						|| Keyboard.getEventKey() == Keyboard.KEY_RIGHT) {
 					if (Keyboard.getEventKeyState()) {
-						character.xVel = 5;
+						character.xVel = 5 * speedIndicator;
 						right = true;
 					} else {
 						right = false;
@@ -346,13 +358,24 @@ public class Main {
 				if (Keyboard.getEventKey() == Keyboard.KEY_A
 						|| Keyboard.getEventKey() == Keyboard.KEY_LEFT) {
 					if (Keyboard.getEventKeyState()) {
-						character.xVel = -5;
+						character.xVel = -5 * speedIndicator;
 						left = true;
 					} else {
 						left = false;
 						if (!right) {
 							character.xVel = 0;
 						}
+					}
+				}
+				if (Keyboard.getEventKey() == Keyboard.KEY_ADD) {
+					if (Keyboard.getEventKeyState()) {
+						if (counter == 2) {
+							counter = 0;
+						}
+						else {
+							counter++;
+						}
+						character.selectActiveStrategy(counter);
 					}
 				}
 			}
