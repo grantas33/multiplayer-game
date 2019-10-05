@@ -28,7 +28,7 @@ class UdpConnection implements SubjectInterface {
         }
     }
 
-    static UdpConnection getInstance() {
+    synchronized static UdpConnection getInstance() {
         if (instance == null) {
             instance = new UdpConnection();
         }
