@@ -1,8 +1,8 @@
 package client.side.strategy;
 
-public class Bolt extends Strategy {
+public class Normal extends Strategy {
     @Override
     public int speedIndicator() {
-        return 8;
+        return 2;
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import client.side.enumerators.GamePhase;
 import client.side.enumerators.SpaceshipType;
 import client.side.factory.CharacterObjFactory;
+import client.side.strategy.Normal;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -170,12 +171,10 @@ public class Main {
         if (selectedType != null) {
         	character = CharacterObjFactory.createCharacterObj(selectedType, ID);
 
-        	Bolt bolt = new Bolt();
-			Runner runner = new Runner();
-			Slow slow = new Slow();
-			character.addStrategy(bolt);
-			character.addStrategy(runner);
-			character.addStrategy(slow);
+			character.addStrategy(new Bolt());
+			character.addStrategy(new Runner());
+			character.addStrategy(new Normal());
+			character.addStrategy(new Slow());
 			counter = 0;
 
 			gamePhase = GamePhase.LIVE_MATCH;

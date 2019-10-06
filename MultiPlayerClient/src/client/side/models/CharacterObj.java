@@ -37,21 +37,20 @@ public class CharacterObj implements Serializable {
         this.id = id;
     }
 
-	public void addStrategy(Strategy s) {
-    	this.strategies.add(s);
-    	this.strategy = s;
-	}
+    public void addStrategy(Strategy s) {
+        this.strategies.add(s);
+        this.strategy = s;
+    }
 
-	public void selectActiveStrategy(int index) {
-    	try {
-    		this.strategy = this.strategies.get(index);
+    public void selectActiveStrategy(int index) {
+        try {
+            this.strategy = this.strategies.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
 
-		} catch (IndexOutOfBoundsException e) {
-    		e.printStackTrace();
-		}
-	}
-
-	public int speedIndicator() {
-    	return strategy.speedIndicator();
-	}
+    public int speedIndicator() {
+        return strategy.speedIndicator();
+    }
 }
