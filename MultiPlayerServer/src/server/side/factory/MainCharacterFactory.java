@@ -1,6 +1,10 @@
 package server.side.factory;
 
 import server.side.MainCharacter;
+import server.side.builder.CharacterBuilderInterface;
+import server.side.builder.CruiserBuilder;
+import server.side.builder.SpeedoBuilder;
+import server.side.builder.TankBuilder;
 import server.side.enumerators.SpaceshipType;
 import server.side.models.CharacterObj;
 
@@ -9,6 +13,7 @@ import java.security.InvalidParameterException;
 import static server.side.enumerators.SpaceshipType.*;
 
 public class MainCharacterFactory {
+
     public static final int SPEEDO_WIDTH = 50;
     public static final int SPEEDO_HEIGHT = 50;
     public static final int SPEEDO_HP = 100;
@@ -23,20 +28,27 @@ public class MainCharacterFactory {
 
 
     public static MainCharacter createMainCharacter(CharacterObj data) {
-        MainCharacter character;
+
+        CharacterBuilderInterface characterBuilder;
         switch (data.type) {
             case SPEEDO:
-                character = new MainCharacter(SPEEDO_WIDTH, SPEEDO_HEIGHT, SPEEDO_HP, data.id, data.newBullets);
+                characterBuilder = new SpeedoBuilder();
                 break;
             case TANK:
-                character = new MainCharacter(TANK_WIDTH, TANK_HEIGHT, TANK_HP, data.id, data.newBullets);
+                characterBuilder = new TankBuilder();
                 break;
             case CRUISER:
-                character = new MainCharacter(CRUISER_WIDTH, CRUISER_HEIGHT, CRUISER_HP, data.id, data.newBullets);
+                characterBuilder = new CruiserBuilder();
                 break;
             default:
                 throw new InvalidParameterException("Spaceship type doesn't exist.");
         }
-        return character;
+
+        characterBuilder.buildDimensions();
+        characterBuilder.buildHp();
+        characterBuilder.buildData(data);
+        characterBuilder.buildColor();
+
+        return characterBuilder.getMainCharacter();
     }
 }

@@ -39,6 +39,7 @@ public class MainCharacter{
 	private int hp;
 	private int fullHp;
 
+	public MainCharacter() { }
 
 	/**
 	 *
@@ -87,8 +88,8 @@ public class MainCharacter{
 	 * Function to add bullets that we get from client side to corresponding character.
 	 * @param newBullets New bullets.
 	 */
-	
-	private void addBullets(List<Bullet> newBullets){
+
+	public void addBullets(List<Bullet> newBullets){
 		if (newBullets == null)	return;
 		
 		for (Bullet sb : newBullets){
@@ -192,11 +193,55 @@ public class MainCharacter{
 	public float getB(){
 		return b;
 	}
-	
+
+	public void setR(float r) {
+		this.r = r;
+	}
+
+	public void setG(float g) {
+		this.g = g;
+	}
+
+	public void setB(float b) {
+		this.b = b;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setBullets(List<ServerBullet> bullets) {
+		this.bullets = bullets;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public void setFullHp(int fullHp) {
+		this.fullHp = fullHp;
+	}
+
 	/**
 	 * ServerBullet class represents bullets of main character
 	 */
-	private class ServerBullet {
+	public class ServerBullet {
 
 		private float d, 	// distance between old and new bullet position
 				direc; 		// y=kx+c going up or down
