@@ -1,8 +1,10 @@
 package server.side.builder;
 
 import server.side.MainCharacter;
+import server.side.enumerators.SpaceshipType;
 import server.side.factory.MainCharacterFactory;
 import server.side.models.CharacterObj;
+import server.side.models.server.Bullet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +39,8 @@ public class SpeedoBuilder implements CharacterBuilderInterface {
     @Override
     public void buildData(CharacterObj data) {
         mainCharacter.setId(data.id);
-        mainCharacter.setBullets(Collections.synchronizedList(new ArrayList<MainCharacter.ServerBullet>()));
+        mainCharacter.setType(SpaceshipType.SPEEDO);
+        mainCharacter.setBullets(Collections.synchronizedList(new ArrayList<Bullet>()));
         mainCharacter.addBullets(data.newBullets);
     }
 

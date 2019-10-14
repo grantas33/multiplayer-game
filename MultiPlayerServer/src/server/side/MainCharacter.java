@@ -9,19 +9,17 @@ import java.util.Random;
 import java.util.Vector;
 
 import server.side.enumerators.SpaceshipType;
+import server.side.facade.ServerBulletFacade;
 import server.side.models.Box;
 import server.side.models.Bullet;
 import server.side.models.CharacterObj;
 
 public class MainCharacter{
 
-	private static final int MAP_WIDTH = 1500;
-	private static final int MAP_HEIGTH = 900;
-	
 	private float r;
 	private float g;
 	private float b;
-	
+
 	private int x;
 	private int y;
 	private int width;
@@ -29,15 +27,19 @@ public class MainCharacter{
 	private SpaceshipType type;
 	//Thread safe list because bullets can be updated while 
 	//iterating them which would resolve in an error.
-	private List<ServerBullet> bullets;
-	
+	private List<server.side.models.server.Bullet> bullets;
+
 	private long id;
 
 	private int xVel;
 	private int yVel;
-	
+
 	private int hp;
 	private int fullHp;
+
+	public void reduceHp(int reduce) {
+		hp -= reduce;
+	}
 
 	public MainCharacter() { }
 
@@ -67,7 +69,7 @@ public class MainCharacter{
 		fullHp = hp;
 		this.id = id;
 
-		bullets = Collections.synchronizedList(new ArrayList<ServerBullet>());
+		bullets = Collections.synchronizedList(new ArrayList<server.side.models.server.Bullet>());
 		addBullets(newBullets);
 	}
 	
@@ -92,13 +94,26 @@ public class MainCharacter{
 	public void addBullets(List<Bullet> newBullets){
 		if (newBullets == null)	return;
 		
-		for (Bullet sb : newBullets){
-			bullets.add(new ServerBullet(sb.x, sb.y, sb.k, sb.c, sb.pn, r, g, b));
+		for (Bullet sb : newBullets) {
+//			bullets.add(ServerBulletFacade.createSpeedoBullet(sb, r, g, b));
+			switch (type) {
+				case TANK:
+					bullets.add(ServerBulletFacade.createTankBullet(sb, r, g, b));
+					break;
+				case SPEEDO:
+					bullets.add(ServerBulletFacade.createSpeedoBullet(sb, r, g, b));
+					break;
+				case CRUISER:
+					bullets.add(ServerBulletFacade.createCruiserBullet(sb, r, g, b));
+					break;
+				default:
+					return;
+			}
 		}
 	}
 	
 	/**
-	 * This function updates character's and bullets' positions.
+	 * This function updates character's and bullets' positions.d
 	 * Deletes bullet if there is a collision, changes XPs of enemies.
 	 * @param tiles 	Simple obstacles.
 	 * @param fullCharacters	All players on-line.
@@ -113,32 +128,32 @@ public class MainCharacter{
 		//updating bullets
 		synchronized (bullets) {
 			
-			Iterator<ServerBullet> itr = bullets.listIterator();
+			Iterator<server.side.models.server.Bullet> itr = bullets.listIterator();
 			while (itr.hasNext()) {
 				
-				ServerBullet bullet = itr.next();
+				server.side.models.server.Bullet bullet = itr.next();
 				if (bullet.update(tiles, fullCharacters, id)) {
 					itr.remove();
 				}
 				else{
-					boxes.add(new Box(bullet.x, bullet.y, bullet.width, bullet.height, 
-							bullet.r, bullet.g, bullet.b, -1L, -1));
+					boxes.add(new Box(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight(),
+							bullet.getR(), bullet.getG(), bullet.getB(), -1L, -1));
 				}
 			}
 		}
 		//updating character
 		x += xVel;
-		if (x < 0 || x + width > MAP_WIDTH) {
+		if (x < 0 || x + width > Main.MAP_WIDTH) {
 			x -= xVel;
 		}
 		y += yVel;
-		if (y < 0 || y + height > MAP_HEIGTH) {
+		if (y < 0 || y + height > Main.MAP_HEIGTH) {
 			y -= yVel;
 		}
 		
 		//checking collision with obstacles
 		for (Box obs : tiles) {
-			if (collision(x, y, x + width, y + height,
+			if (LogicHelper.collision(x, y, x + width, y + height,
 					obs.x, obs.y, obs.x + obs.w, obs.y + obs.h)){
 				x -= xVel;
 				y -= yVel;
@@ -146,7 +161,7 @@ public class MainCharacter{
 		}
 		
 		//if xp is below 1 we reset player to its initial position
-		if (hp < 0){
+		if (hp < 1){
 			x = y = 0;
 			hp = fullHp;
 		}
@@ -158,14 +173,7 @@ public class MainCharacter{
 	public long getID(){
 		return id;
 	}
-	/**
-	 * Function to check if two square objects collide.
-	 */
-	private boolean collision(float f, float h, float i, float j, float left,
-			float top, float right, float buttom) {
-		return f < right && i > left && h < buttom && j > top;
-	}
-	
+
 	public int getX() {
 		return x;
 	}
@@ -222,7 +230,7 @@ public class MainCharacter{
 		this.height = height;
 	}
 
-	public void setBullets(List<ServerBullet> bullets) {
+	public void setBullets(List<server.side.models.server.Bullet> bullets) {
 		this.bullets = bullets;
 	}
 
@@ -238,79 +246,11 @@ public class MainCharacter{
 		this.fullHp = fullHp;
 	}
 
-	/**
-	 * ServerBullet class represents bullets of main character
-	 */
-	public class ServerBullet {
-
-		private float d, 	// distance between old and new bullet position
-				direc; 		// y=kx+c going up or down
-		private float k, c, x, y; 	// y=kx+c
-		private int width, height;
-		private float r, g,b;
-		
-		public ServerBullet(float x, float y, float k, float c, float direc, float r, float g, float b){
-			
-			this.x = x;
-			this.y = y;
-			this.c = c;
-			this.k = k;
-			this.direc = direc;
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			
-			d = 8f;
-			width = height = 10;
-		}
-		
-		/**
-		 * Updates bullets state.
-		 * @param obstacles		Simple square obstacles .
-		 * @param fullCharacters	All characters.
-		 * @param id	Id of this character so we don't check collision with itself.
-		 * @return If there was a collision returns true otherwise false.
-		 */
-		
-		private boolean update(List<Box> obstacles,Vector<MainCharacter> fullCharacters, long id) {
-			
-			//collision with tiles
-			for (Box obs : obstacles) {
-				if (collision(x, y, x + width, y + height,
-						obs.x, obs.y, obs.x + obs.w, obs.y + obs.h)) {
-					return true;
-				}
-			}
-			//collision with enemies
-			for (MainCharacter mc : fullCharacters){
-				if (mc.id == id)
-					continue;
-				if (collision(x, y, x + width, y + height,
-						mc.x, mc.y, mc.x + mc.width, mc.y + mc.height)){
-					mc.hp -= 30;
-					return true;
-				}
-			}
-
-			//collision with map
-			if (x < 0 || x > MAP_WIDTH || y < 0 || y > MAP_HEIGTH) {
-				return true;
-			}
-
-			/* 
-			 * Super cool formula to find next x that is d (distance) away from
-			 * starting point.
-			 * Used distance formula and wolfram alpha to express next x position 
-			 */
-			x = (float) (-c * k + x + k * y - direc
-					* Math.sqrt(-c * c + d * d + d * d * k * k - 2 * c * k * x
-							- k * k * x * x + 2 * c * y + 2 * k * x * y - y * y))
-					/ (1 + k * k);
-			y = k * x + c;
-			
-			return false;
-		}
-
+	public SpaceshipType getType() {
+		return type;
 	}
 
+	public void setType(SpaceshipType type) {
+		this.type = type;
+	}
 }

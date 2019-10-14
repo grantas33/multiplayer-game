@@ -26,6 +26,8 @@ import java.util.Vector;
 
 
 public class Main {
+	public static final int MAP_WIDTH = 1500;
+	public static final int MAP_HEIGTH = 900;
 
 	private static final String TILES_FILE = "/gameInfo.txt";
 	
