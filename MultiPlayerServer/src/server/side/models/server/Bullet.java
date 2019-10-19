@@ -6,6 +6,7 @@ import server.side.MainCharacter;
 import server.side.models.Box;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -165,4 +166,28 @@ public class Bullet {
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bullet bullet = (Bullet) o;
+        return Float.compare(bullet.direc, direc) == 0 &&
+                Float.compare(bullet.speed, speed) == 0 &&
+                Float.compare(bullet.k, k) == 0 &&
+                Float.compare(bullet.c, c) == 0 &&
+                Float.compare(bullet.x, x) == 0 &&
+                Float.compare(bullet.y, y) == 0 &&
+                width == bullet.width &&
+                height == bullet.height &&
+                Float.compare(bullet.r, r) == 0 &&
+                Float.compare(bullet.g, g) == 0 &&
+                Float.compare(bullet.b, b) == 0 &&
+                damage == bullet.damage &&
+                range == bullet.range;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(direc, speed, k, c, x, y, width, height, r, g, b, damage, range);
+    }
 }

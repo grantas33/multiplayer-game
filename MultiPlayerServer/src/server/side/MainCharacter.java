@@ -189,7 +189,15 @@ public class MainCharacter{
 	public int getHeight() {
 		return height;
 	}
-	
+
+	public int getHp() {
+		return hp;
+	}
+
+	public int getFullHp() {
+		return fullHp;
+	}
+
 	public float getR(){
 		return r;
 	}
@@ -200,6 +208,10 @@ public class MainCharacter{
 	
 	public float getB(){
 		return b;
+	}
+
+	public List<server.side.models.server.Bullet> getBullets() {
+		return bullets;
 	}
 
 	public void setR(float r) {

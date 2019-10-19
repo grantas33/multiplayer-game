@@ -19,6 +19,10 @@ public class CruiserBuilder implements CharacterBuilderInterface {
         this.mainCharacter = new MainCharacter();
     }
 
+    public Random makeRandom() {
+        return new Random();
+    }
+
     @Override
     public MainCharacter getMainCharacter() {
         return mainCharacter;
@@ -46,7 +50,7 @@ public class CruiserBuilder implements CharacterBuilderInterface {
 
     @Override
     public void buildColor() {
-        Random randomFloat = new Random(System.currentTimeMillis());
+        Random randomFloat = makeRandom();
         mainCharacter.setR(randomFloat.nextFloat());
         mainCharacter.setB(randomFloat.nextFloat());
         mainCharacter.setG(randomFloat.nextFloat());
