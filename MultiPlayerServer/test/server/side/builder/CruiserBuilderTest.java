@@ -1,8 +1,7 @@
 package server.side.builder;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import server.side.MainCharacter;
 import server.side.enumerators.SpaceshipType;
 import server.side.factory.MainCharacterFactory;
@@ -19,6 +18,12 @@ import static org.mockito.Mockito.*;
 class CruiserBuilderTest {
 
     private CruiserBuilder cruiserBuilder = spy(CruiserBuilder.class);
+
+    @AfterEach
+    void cleanCharacter() {
+        cruiserBuilder.setMainCharacter(new MainCharacter());
+    }
+
 
     @Test
     void buildDimensions() {

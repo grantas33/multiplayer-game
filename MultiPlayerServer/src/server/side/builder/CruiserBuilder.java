@@ -19,13 +19,17 @@ public class CruiserBuilder implements CharacterBuilderInterface {
         this.mainCharacter = new MainCharacter();
     }
 
-    public Random makeRandom() {
+    Random makeRandom() {
         return new Random();
     }
 
     @Override
     public MainCharacter getMainCharacter() {
         return mainCharacter;
+    }
+
+    void setMainCharacter(MainCharacter mainCharacter) {
+        this.mainCharacter = mainCharacter;
     }
 
     @Override
