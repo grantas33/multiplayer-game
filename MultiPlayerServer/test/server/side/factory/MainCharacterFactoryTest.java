@@ -38,30 +38,30 @@ class MainCharacterFactoryTest {
 
     @ParameterizedTest
     @EnumSource(SpaceshipType.class)
-    void createMainCharacter(SpaceshipType type) {
+    void itShouldCreateMainCharacter(SpaceshipType type) {
+        CharacterBuilderInterface builder = getBuilderForType(type);
         CharacterObj characterObj = createCharacterByType(type);
         MainCharacter mc = mcFactory.createMainCharacter(characterObj);
 
-        switch (type) {
-            case SPEEDO:
-                verifyForBuilder(speedoBuilderMock, characterObj);
-                assertEquals(mc, createMainCharacterByType(SpaceshipType.SPEEDO));
-                break;
-            case TANK:
-                verifyForBuilder(tankBuilderMock, characterObj);
-                assertEquals(mc, createMainCharacterByType(SpaceshipType.TANK));
-                break;
-            case CRUISER:
-                verifyForBuilder(cruiserBuilderMock, characterObj);
-                assertEquals(mc, createMainCharacterByType(SpaceshipType.CRUISER));
-        }
-    }
-
-    private void verifyForBuilder(CharacterBuilderInterface builder, CharacterObj characterData) {
         verify(builder).buildDimensions();
         verify(builder).buildHp();
-        verify(builder).buildData(characterData);
+        verify(builder).buildData(characterObj);
         verify(builder).buildColor();
+        assertEquals(mc, createMainCharacterByType(type));
+
+    }
+
+    private CharacterBuilderInterface getBuilderForType(SpaceshipType type) {
+        switch (type) {
+            case SPEEDO:
+                return speedoBuilderMock;
+            case TANK:
+                return tankBuilderMock;
+            case CRUISER:
+                return cruiserBuilderMock;
+            default:
+                return null;
+        }
     }
 
     private CharacterObj createCharacterByType(SpaceshipType type) {

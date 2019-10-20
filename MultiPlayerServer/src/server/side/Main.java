@@ -50,28 +50,42 @@ public class Main {
 	
 	private UdpConnection udpSend;
 
-	private MainCharacterFactory mcFactory = new MainCharacterFactory(
-			new SpeedoBuilder(),
-			new TankBuilder(),
-			new CruiserBuilder()
-	);
-	
-	public static void main(String[] args) {
+	private MainCharacterFactory mcFactory;
+
+    public Vector<MainCharacter> getFullCharacters() {
+        return fullCharacters;
+    }
+
+    public void setFullCharacters(Vector<MainCharacter> fullCharacters) {
+        this.fullCharacters = fullCharacters;
+    }
+
+    public static void main(String[] args) {
 		
 		if (args.length != 1)
 			throw new IllegalArgumentException("Bad input");
+
+        MainCharacterFactory mcFactory = new MainCharacterFactory(
+                new SpeedoBuilder(),
+                new TankBuilder(),
+                new CruiserBuilder()
+        );
 		
-		Main main = new Main(Integer.parseInt(args[0]));
+		Main main = new Main(
+		        Integer.parseInt(args[0]),
+                mcFactory
+        );
 		main.start();
 	}
 	
-	public Main(int tcpPort){
+	public Main(int tcpPort, MainCharacterFactory mcFactory){
 		
 		SERVER_PORT_TCP = tcpPort;
 		tiles = new WrapperList();
 		gamePlay = new WrapperList();
 		udpSend = UdpConnection.getInstance();
 		fullCharacters = new Vector<MainCharacter>();
+		this.mcFactory = mcFactory;
 	}
 
 	private void start(){

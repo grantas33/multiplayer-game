@@ -26,7 +26,7 @@ class CruiserBuilderTest {
 
 
     @Test
-    void buildDimensions() {
+    void itShouldBuildDimensions() {
         cruiserBuilder.buildDimensions();
         MainCharacter character = cruiserBuilder.getMainCharacter();
         assertEquals(character.getHeight(), MainCharacterFactory.CRUISER_HEIGHT);
@@ -34,7 +34,7 @@ class CruiserBuilderTest {
     }
 
     @Test
-    void buildHp() {
+    void itShouldBuildHp() {
         cruiserBuilder.buildHp();
         MainCharacter character = cruiserBuilder.getMainCharacter();
         assertEquals(character.getHp(), MainCharacterFactory.CRUISER_HP);
@@ -42,7 +42,7 @@ class CruiserBuilderTest {
     }
 
     @Test
-    void buildData() {
+    void itShouldBuildData() {
         CharacterObj characterObj = createCharacterObjWithBullets(createBulletList());
         cruiserBuilder.buildData(characterObj);
         MainCharacter character = cruiserBuilder.getMainCharacter();
@@ -52,7 +52,7 @@ class CruiserBuilderTest {
     }
 
     @Test
-    void buildColor() {
+    void itShouldBuildColor() {
         Random mockedRandom = mock(Random.class);
         when(mockedRandom.nextFloat()).thenReturn(0.25f, 0.70f, 0.99f);
 

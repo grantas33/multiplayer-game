@@ -209,7 +209,15 @@ public class MainCharacter{
 		return bullets;
 	}
 
-	public void setR(float r) {
+    public int getxVel() {
+        return xVel;
+    }
+
+    public int getyVel() {
+        return yVel;
+    }
+
+    public void setR(float r) {
 		this.r = r;
 	}
 
@@ -261,7 +269,15 @@ public class MainCharacter{
 		this.type = type;
 	}
 
-	@Override
+    public void setxVel(int xVel) {
+        this.xVel = xVel;
+    }
+
+    public void setyVel(int yVel) {
+        this.yVel = yVel;
+    }
+
+    @Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
