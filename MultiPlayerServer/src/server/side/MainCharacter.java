@@ -1,12 +1,7 @@
 package server.side;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
 
 import server.side.enumerators.SpaceshipType;
 import server.side.facade.ServerBulletFacade;
@@ -264,5 +259,31 @@ public class MainCharacter{
 
 	public void setType(SpaceshipType type) {
 		this.type = type;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MainCharacter character = (MainCharacter) o;
+		return Float.compare(character.r, r) == 0 &&
+				Float.compare(character.g, g) == 0 &&
+				Float.compare(character.b, b) == 0 &&
+				x == character.x &&
+				y == character.y &&
+				width == character.width &&
+				height == character.height &&
+				id == character.id &&
+				xVel == character.xVel &&
+				yVel == character.yVel &&
+				hp == character.hp &&
+				fullHp == character.fullHp &&
+				type == character.type &&
+				Objects.equals(bullets, character.bullets);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(r, g, b, x, y, width, height, type, bullets, id, xVel, yVel, hp, fullHp);
 	}
 }
