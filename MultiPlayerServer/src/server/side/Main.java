@@ -2,6 +2,9 @@ package server.side;
 
 
 import server.side.Helper.WrapperList;
+import server.side.builder.CruiserBuilder;
+import server.side.builder.SpeedoBuilder;
+import server.side.builder.TankBuilder;
 import server.side.factory.MainCharacterFactory;
 import server.side.interfaces.ObserverInterface;
 import server.side.models.Box;
@@ -46,6 +49,12 @@ public class Main {
 	private WrapperList gamePlay;
 	
 	private UdpConnection udpSend;
+
+	private MainCharacterFactory mcFactory = new MainCharacterFactory(
+			new SpeedoBuilder(),
+			new TankBuilder(),
+			new CruiserBuilder()
+	);
 	
 	public static void main(String[] args) {
 		
@@ -136,7 +145,7 @@ public class Main {
 			}
 		}
 		//if it is new character then we add it to the list
-		MainCharacter newMc = MainCharacterFactory.createMainCharacter(data);
+		MainCharacter newMc = mcFactory.createMainCharacter(data);
 		fullCharacters.add(newMc);
 	}
 	

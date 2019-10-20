@@ -14,6 +14,10 @@ import static server.side.enumerators.SpaceshipType.*;
 
 public class MainCharacterFactory {
 
+    private CharacterBuilderInterface speedoBuilder;
+    private CharacterBuilderInterface tankBuilder;
+    private CharacterBuilderInterface cruiserBuilder;
+
     public static final int SPEEDO_WIDTH = 50;
     public static final int SPEEDO_HEIGHT = 50;
     public static final int SPEEDO_HP = 100;
@@ -26,19 +30,24 @@ public class MainCharacterFactory {
     public static final int CRUISER_HEIGHT = 150;
     public static final int CRUISER_HP = 200;
 
+    public MainCharacterFactory(CharacterBuilderInterface speedoBuilder, CharacterBuilderInterface tankBuilder, CharacterBuilderInterface cruiserBuilder) {
+        this.speedoBuilder = speedoBuilder;
+        this.tankBuilder = tankBuilder;
+        this.cruiserBuilder = cruiserBuilder;
+    }
 
-    public static MainCharacter createMainCharacter(CharacterObj data) {
+    public MainCharacter createMainCharacter(CharacterObj data) {
 
         CharacterBuilderInterface characterBuilder;
         switch (data.type) {
             case SPEEDO:
-                characterBuilder = new SpeedoBuilder();
+                characterBuilder = this.speedoBuilder;
                 break;
             case TANK:
-                characterBuilder = new TankBuilder();
+                characterBuilder = this.tankBuilder;
                 break;
             case CRUISER:
-                characterBuilder = new CruiserBuilder();
+                characterBuilder = this.cruiserBuilder;
                 break;
             default:
                 throw new InvalidParameterException("Spaceship type doesn't exist.");
