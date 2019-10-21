@@ -7,6 +7,8 @@ public interface CharacterBuilderInterface {
 
     MainCharacter getMainCharacter();
 
+    void setMainCharacter(MainCharacter mc);
+
     void buildDimensions();
 
     void buildHp();

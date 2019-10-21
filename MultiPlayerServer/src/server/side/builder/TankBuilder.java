@@ -25,6 +25,11 @@ public class TankBuilder implements CharacterBuilderInterface {
     }
 
     @Override
+    public void setMainCharacter(MainCharacter mainCharacter) {
+        this.mainCharacter = mainCharacter;
+    }
+
+    @Override
     public void buildDimensions() {
         mainCharacter.setHeight(MainCharacterFactory.TANK_HEIGHT);
         mainCharacter.setWidth(MainCharacterFactory.TANK_WIDTH);

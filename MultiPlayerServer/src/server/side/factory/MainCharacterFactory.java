@@ -41,17 +41,19 @@ public class MainCharacterFactory {
         CharacterBuilderInterface characterBuilder;
         switch (data.type) {
             case SPEEDO:
-                characterBuilder = this.speedoBuilder;
+                characterBuilder = speedoBuilder;
                 break;
             case TANK:
-                characterBuilder = this.tankBuilder;
+                characterBuilder = tankBuilder;
                 break;
             case CRUISER:
-                characterBuilder = this.cruiserBuilder;
+                characterBuilder = cruiserBuilder;
                 break;
             default:
                 throw new InvalidParameterException("Spaceship type doesn't exist.");
         }
+
+        characterBuilder.setMainCharacter(new MainCharacter());
 
         characterBuilder.buildDimensions();
         characterBuilder.buildHp();

@@ -25,6 +25,11 @@ public class SpeedoBuilder implements CharacterBuilderInterface {
     }
 
     @Override
+    public void setMainCharacter(MainCharacter mainCharacter) {
+        this.mainCharacter = mainCharacter;
+    }
+
+    @Override
     public void buildDimensions() {
         mainCharacter.setHeight(MainCharacterFactory.SPEEDO_HEIGHT);
         mainCharacter.setWidth(MainCharacterFactory.SPEEDO_WIDTH);

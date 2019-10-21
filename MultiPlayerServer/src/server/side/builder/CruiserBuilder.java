@@ -28,7 +28,8 @@ public class CruiserBuilder implements CharacterBuilderInterface {
         return mainCharacter;
     }
 
-    void setMainCharacter(MainCharacter mainCharacter) {
+    @Override
+    public void setMainCharacter(MainCharacter mainCharacter) {
         this.mainCharacter = mainCharacter;
     }
 
