@@ -21,7 +21,8 @@ class CharacterObjFactoryTest {
 
     @ParameterizedTest
     @MethodSource("spaceshipTypeGenerator")
-    void createCharacterObj(SpaceshipType type) {
+    void testCreateCharacterObj(SpaceshipType type) {
         assertEquals(type, CharacterObjFactory.createCharacterObj(type, 0).type);
+        assertEquals(10, CharacterObjFactory.createCharacterObj(type, 10).id);
     }
 }

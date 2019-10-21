@@ -36,4 +36,21 @@ public class Box{
 		this.id= id;
 		this.hp = hp;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Box box = (Box) o;
+
+		return Float.compare(box.r, r) == 0 &&
+				Float.compare(box.g, g) == 0 &&
+				Float.compare(box.b, b) == 0 &&
+				x == box.x &&
+				y == box.y &&
+				w == box.w &&
+				h == box.h &&
+				id == box.id &&
+				hp == box.hp;
+	}
 }
