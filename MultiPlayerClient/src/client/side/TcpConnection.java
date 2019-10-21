@@ -1,8 +1,6 @@
 package client.side;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
@@ -25,12 +23,12 @@ class TcpConnection {
 	
 	private final String SERVER_IP;
 
-	private ObjectOutputStream oos;
-	private ObjectInputStream ois;
+	private ObjectOutput oos;
+	private ObjectInput ois;
 	
 	private Socket socket;
 
-	TcpConnection(Main main, String ip, int port) {
+	TcpConnection(String ip, int port) {
 		
 		SERVER_PORT_TCP = port;
 		SERVER_IP = ip;
@@ -41,6 +39,13 @@ class TcpConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	TcpConnection(String ip, int port, ObjectOutput oos, ObjectInput ois) {
+		SERVER_PORT_TCP = port;
+		SERVER_IP = ip;
+		this.oos = oos;
+		this.ois = ois;
 	}
 	
 	/** Gets unique ID for player **/
@@ -82,7 +87,7 @@ class TcpConnection {
 			sm.setCharacterData(character);
 			String data = Helper.marshall(sm);
 			oos.writeObject(data);
-			oos.reset();
+//			((ObjectOutputStream) oos).reset();
 		} catch (IOException | JAXBException e) {
 			e.printStackTrace();
 		}
@@ -109,7 +114,7 @@ class TcpConnection {
 			sm.setId(id);
 			String data = Helper.marshall(sm);
 			oos.writeObject(data);
-			//oos.reset();
+//			((ObjectOutputStream) oos).reset();
 		} catch (IOException | JAXBException e) {
 			e.printStackTrace();
 		}

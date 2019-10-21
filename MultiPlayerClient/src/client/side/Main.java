@@ -104,7 +104,7 @@ public class Main {
 
 	/** Setting up screen, establishing connections (TCP, UPD) with server, etc. */
 	private void init() {
-		connections = new TcpConnection(this, server_ip, server_port_tcp);
+		connections = new TcpConnection(server_ip, server_port_tcp);
 
 		if ((ID = connections.getIdFromServer()) == -1) {
 			System.err.println("cant get id for char");
