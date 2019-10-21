@@ -86,7 +86,7 @@ public class Main {
 	}
 	
 	/** Initializing OpenGL functions */
-	private void initOpenGl() {
+	void initOpenGl() {
 
 		try {
 			Display.setDisplayMode(new DisplayMode(DISPLAY_WIDTH, DISPLAY_HEIGTH));
@@ -152,7 +152,7 @@ public class Main {
 		closingOperations();
 	}
 
-	private void spaceshipSelectGamePhaseLoop() {
+	void spaceshipSelectGamePhaseLoop() {
         Box speedo = new Box(100, 200, CharacterObjFactory.SPEEDO_WIDTH, CharacterObjFactory.SPEEDO_HEIGHT, 255, 255, 255, 0, 0);
         Box tank = new Box(300, 200, CharacterObjFactory.TANK_WIDTH, CharacterObjFactory.TANK_HEIGHT, 100, 100, 100, 0, 0);
         Box cruiser = new Box(500, 200, CharacterObjFactory.CRUISER_WIDTH, CharacterObjFactory.CRUISER_HEIGHT, 100, 100, 100, 0, 0);
@@ -181,7 +181,7 @@ public class Main {
         }
     }
 
-    private void liveMatchGamePhaseLoop() {
+    void liveMatchGamePhaseLoop() {
 	    if (character != null) {
             handlingEvents();
             sendCharacter();
@@ -192,8 +192,7 @@ public class Main {
 
 	
 	/** Updating camera's position */
-	private void update() {
-
+	void update() {
 		if (updatedCharacter != null) {
 			camera.update(updatedCharacter);
 		}
@@ -201,7 +200,7 @@ public class Main {
 
 	
 	/** Rendering obstacles, players and bullets */
-	private void render() {
+	void render() {
 
 		glTranslatef(-camera.xmov, -camera.ymov, 0);	//camera's position
 
@@ -213,12 +212,12 @@ public class Main {
 		}
 	}
 
-	private void drawText(float x, float y, String text) {
+	void drawText(float x, float y, String text) {
 		uf.drawString(x, y, text);
 	}
 
 	/** Function to draw square */
-	private void drawSquare(Box box) {
+	void drawSquare(Box box) {
 
 		glColor3f(box.r, box.g, box.b);
 		glBegin(GL_QUADS);
@@ -229,7 +228,7 @@ public class Main {
 		glEnd();
 	}
 
-	private SpaceshipType pollInputForSpaceshipType() {
+	SpaceshipType pollInputForSpaceshipType() {
 		if (Mouse.isButtonDown(0)) {
 			int x = Mouse.getX();
 			int y = Mouse.getY();
@@ -248,7 +247,7 @@ public class Main {
 	}
 
 	/** Function to send main characters data to server */
-	private void sendCharacter() {
+	void sendCharacter() {
 
 		character.newBullets = bullets;
 		connections.sendUpdatedVersion(character);
@@ -382,7 +381,7 @@ public class Main {
 	/**
 	 * Camera shows map regarding main character's position
 	 */
-	private class Camera {
+	public class Camera {
 
 		private float x;
 		private float y;
