@@ -90,7 +90,6 @@ public class MainCharacter{
 		if (newBullets == null)	return;
 		
 		for (Bullet sb : newBullets) {
-//			bullets.add(ServerBulletFacade.createSpeedoBullet(sb, r, g, b));
 			switch (type) {
 				case TANK:
 					bullets.add(ServerBulletFacade.createTankBullet(sb, r, g, b));
