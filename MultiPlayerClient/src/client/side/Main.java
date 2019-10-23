@@ -9,6 +9,7 @@ import java.util.List;
 import client.side.enumerators.GamePhase;
 import client.side.enumerators.SpaceshipType;
 import client.side.factory.CharacterObjFactory;
+import client.side.sound.PlayerSounds;
 import client.side.strategy.Normal;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -66,7 +67,8 @@ public class Main {
 	private int server_port_tcp;
 	private int client_port_udp;
 	private int counter;
-	
+	private PlayerSounds playerSounds;
+
 	public static void main(String[] args) {
 		
 		if (args.length != 3){
@@ -125,6 +127,7 @@ public class Main {
             exception.printStackTrace();
         }
 
+		playerSounds = new PlayerSounds();
 		new Thread(new UdpConnection(this, connections, client_port_udp)).start();
 	}
 
@@ -304,6 +307,7 @@ public class Main {
 					if (xmouse > xmain) {
 						pnx = -1;
 					}
+					playerSounds.getFire().play();
 					bullets.add(new Bullet(xmain, ymain, k, c, pnx));
 				}
 			}
