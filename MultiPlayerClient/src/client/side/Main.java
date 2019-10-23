@@ -235,9 +235,6 @@ public class Main {
 		if (Mouse.isButtonDown(0)) {
 			int x = Mouse.getX();
 			int y = Mouse.getY();
-
-            System.out.println("MOUSE DOWN @ X: " + x + " Y: " + y);
-
 			if(x >= 100 && x <=100 + CharacterObjFactory.SPEEDO_WIDTH && y <=250 + CharacterObjFactory.SPEEDO_HEIGHT && y >= 250) {
 				return SpaceshipType.SPEEDO;
 			} else if (x >= 300 && x <= 300 + CharacterObjFactory.TANK_WIDTH && y <= 200 + CharacterObjFactory.TANK_HEIGHT && y >= 200) {

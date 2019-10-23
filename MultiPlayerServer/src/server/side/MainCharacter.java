@@ -3,6 +3,7 @@ package server.side;
 
 import java.util.*;
 
+import server.side.sound.PlayerSounds;
 import server.side.enumerators.SpaceshipType;
 import server.side.facade.ServerBulletFacade;
 import server.side.models.Box;
@@ -31,6 +32,9 @@ public class MainCharacter{
 
 	private int hp;
 	private int fullHp;
+
+	private PlayerSounds playerSounds;
+
 
 	public void reduceHp(int reduce) {
 		hp -= reduce;
@@ -66,6 +70,7 @@ public class MainCharacter{
 
 		bullets = Collections.synchronizedList(new ArrayList<server.side.models.server.Bullet>());
 		addBullets(newBullets);
+		playerSounds = new PlayerSounds();
 	}
 	
 	/**
@@ -156,6 +161,7 @@ public class MainCharacter{
 		
 		//if xp is below 1 we reset player to its initial position
 		if (hp < 1){
+			playerSounds.getExplosion().play();
 			x = y = 0;
 			hp = fullHp;
 		}
