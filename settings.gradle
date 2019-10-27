@@ -17,4 +17,4 @@ include 'services:webservice'
 
 include("MultiPlayerClient")
 include("MultiPlayerServer")
-rootProject.name = 'grantas-multiplayer-game'
+rootProject.name = 'spaceship-multiplayer-game'
