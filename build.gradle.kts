@@ -32,19 +32,24 @@ dependencies {
 
 plugins {
     java
+    idea
 }
 
 subprojects {
     apply(plugin = "java")
     version = "1.0"
     repositories {
-        mavenCentral()
         jcenter()
+        mavenCentral()
     }
     dependencies {
-        testImplementation("org.mockito", "mockito-all")
-        testImplementation("org.junit.jupiter", "junit-jupiter-api")
-        testImplementation("org.junit.jupiter", "junit-jupiter-params")
+        testImplementation("org.mockito", "mockito-all", version = "2.0.2-beta")
+        testImplementation("org.junit.jupiter", "junit-jupiter-api", version = "5.5.2")
+        testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", version = "5.5.2")
+        testImplementation("org.junit.jupiter", "junit-jupiter-params", version = "5.5.2")
 
+    }
+    tasks.test {
+        useJUnitPlatform()
     }
 }

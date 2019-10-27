@@ -1,3 +1,4 @@
+import org.gradle.internal.deployment.RunApplication
 import org.gradle.internal.os.OperatingSystem
 
 group = "MultiPlayerClient"
@@ -7,8 +8,12 @@ plugins {
     java
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+tasks.register<JavaExec>("runClient1") {
+    group = "run"
+    description = "run client in localhost with a random port"
+    classpath = sourceSets.main.get().runtimeClasspath
+    main = "Main"
+    args("localhost", "10000", "-1")
 }
 
 val lwjglVersion = "3.2.3"
@@ -25,15 +30,27 @@ val lwjglNatives = when (OperatingSystem.current()) {
     else -> throw Error("Unrecognized or unsupported Operating system. Please set \"lwjglNatives\" manually")
 }
 
+repositories {
+    maven {
+        url = uri("https://repo.opennms.org/maven2/")
+    }
+    maven {
+        url = uri("https://www.beatunes.com/repo/maven2/")
+    }
+    maven {
+        url = uri("https://clojars.org/repo/")
+    }
+}
+
 dependencies {
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
-    implementation("org.clojars.aseipp", "ibxm")
-    implementation("net.java.jinput", "jinput")
-    implementation("net.java.jinput", "jinput-platform")
-    implementation("javax.jnlp", "jnlp")
-    implementation("com.jcraft", "jogg")
-    implementation("org.jcraft", "jorbis")
+    implementation("javax.jnlp", "jnlp", version = "1.5.0")
+    implementation("com.jcraft", "jogg", version = "0.0.7")
+    implementation("org.jcraft", "jorbis", version = "0.0.17")
+    implementation("org.clojars.aseipp", "ibxm", version = "0.0.1")
+    implementation("net.java.jinput", "jinput", version = "2.0.9")
+    implementation("net.java.jinput", "jinput-platform", version = "2.0.7")
 
 
     implementation("org.lwjgl", "lwjgl")
