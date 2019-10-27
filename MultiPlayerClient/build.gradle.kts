@@ -1,4 +1,3 @@
-import org.gradle.internal.deployment.RunApplication
 import org.gradle.internal.os.OperatingSystem
 
 group = "MultiPlayerClient"
@@ -8,7 +7,7 @@ plugins {
     java
 }
 
-tasks.register<JavaExec>("runClient1") {
+tasks.register<JavaExec>("runClient") {
     group = "run"
     description = "run client in localhost with a random port"
     classpath = sourceSets.main.get().runtimeClasspath
@@ -44,14 +43,6 @@ repositories {
 
 dependencies {
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
-
-    implementation("javax.jnlp", "jnlp", version = "1.5.0")
-    implementation("com.jcraft", "jogg", version = "0.0.7")
-    implementation("org.jcraft", "jorbis", version = "0.0.17")
-    implementation("org.clojars.aseipp", "ibxm", version = "0.0.1")
-    implementation("net.java.jinput", "jinput", version = "2.0.9")
-    implementation("net.java.jinput", "jinput-platform", version = "2.0.7")
-
 
     implementation("org.lwjgl", "lwjgl")
     implementation("org.lwjgl", "lwjgl-assimp")
