@@ -30,15 +30,13 @@ val lwjglNatives = when (OperatingSystem.current()) {
 }
 
 repositories {
-    maven {
-        url = uri("https://repo.opennms.org/maven2/")
-    }
-    maven {
-        url = uri("https://www.beatunes.com/repo/maven2/")
-    }
-    maven {
-        url = uri("https://clojars.org/repo/")
-    }
+    maven { url = uri("https://repo.opennms.org/maven2/") }
+    maven { url = uri("https://www.beatunes.com/repo/maven2/") }
+    maven { url = uri("https://clojars.org/repo/") }
+    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+    maven { url = uri("https://raw.github.com/SpinyOwl/repo/releases") }
+    maven { url = uri("https://raw.github.com/SpinyOwl/repo/snapshots") }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -66,4 +64,6 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-par", classifier = lwjglNatives)
     runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
     if (lwjglNatives == "natives-macos") runtimeOnly("org.lwjgl", "lwjgl-vulkan", classifier = lwjglNatives)
+
+    implementation("org.liquidengine", "legui", version = "1.5.0-SNAPSHOT")
 }

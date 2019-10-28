@@ -9,6 +9,15 @@ import java.util.List;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
+import org.joml.Vector2i;
+import org.liquidengine.legui.DefaultInitializer;
+import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.style.color.ColorConstants;
+import org.liquidengine.legui.system.context.Context;
+import org.liquidengine.legui.system.layout.LayoutManager;
+import org.liquidengine.legui.system.renderer.Renderer;
+import org.liquidengine.legui.theme.Themes;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -46,6 +55,7 @@ public class Main {
 
 	static long ID = -1; // we get ID from the server side
 	long window;
+	DefaultInitializer guiInitializer;
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 	private GLFWCursorPosCallback cursorPosCallback;
@@ -55,6 +65,12 @@ public class Main {
 	private boolean down = false;
 	private boolean right = false;
 	private boolean left = false;
+
+	List<Label> spaceshipSelectLabels = new ArrayList<>();
+
+	private Frame guiFrame;
+	private Context guiContext;
+	private Renderer guiRenderer;
 
 	private TcpConnection connections; // establishing TCP connection
 
@@ -97,6 +113,26 @@ public class Main {
 		glfwMakeContextCurrent(window);
 		GL.createCapabilities();
 		glfwShowWindow(window);
+		Themes.setDefaultTheme(Themes.FLAT_DARK);
+
+		guiFrame = new Frame(DISPLAY_WIDTH, DISPLAY_HEIGTH);
+		guiFrame.getContainer().getStyle().getBackground().setColor(ColorConstants.transparent());
+
+		Label speedoLabel = new Label("Speedo", 100, 150, 100, 50);
+		Label tankLabel = new Label("Tank", 300, 150, 100, 50);
+		Label cruiserLabel = new Label("Cruiser", 500, 150, 100, 50);
+
+		spaceshipSelectLabels.add(speedoLabel);
+		spaceshipSelectLabels.add(tankLabel);
+		spaceshipSelectLabels.add(cruiserLabel);
+		spaceshipSelectLabels.forEach(it -> {
+			it.getTextState().setFontSize(30);
+			guiFrame.getContainer().add(it);
+		});
+		guiInitializer = new DefaultInitializer(window, guiFrame);
+		guiContext = guiInitializer.getContext();
+		guiRenderer = guiInitializer.getRenderer();
+		guiRenderer.initialize();
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -255,7 +291,14 @@ public class Main {
 		SyncTimer timer  = new SyncTimer(SyncTimer.LWJGL_GLFW);
 		while (!glfwWindowShouldClose(window)) {
 
-		 	glClear(GL_COLOR_BUFFER_BIT);
+			guiContext.updateGlfwWindow();
+			Vector2i windowSize = guiContext.getFramebufferSize();
+			glClearColor(0, 0, 0, 1);
+			// Set viewport size
+			glViewport(0, 0, windowSize.x, windowSize.y);
+		 	glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			glEnable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
 
 			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 				closingOperations();
@@ -268,8 +311,22 @@ public class Main {
                     liveMatchGamePhaseLoop();
             }
 
+			guiRenderer.render(guiFrame, guiContext);
+
 			glfwPollEvents();
 			glfwSwapBuffers(window);
+
+			// Now we need to handle events. Firstly we need to handle system events.
+			// And we need to know to which frame they should be passed.
+			guiInitializer.getSystemEventProcessor().processEvents(guiFrame, guiContext);
+
+			// When system events are translated to GUI events we need to handle them.
+			// This event processor calls listeners added to ui components
+			guiInitializer.getGuiEventProcessor().processEvents();
+
+			LayoutManager.getInstance().layout(guiFrame);
+
+
 			try {
 				timer.sync(FRAMES_PER_SECOND);
 			} catch (Exception e) {
@@ -284,8 +341,6 @@ public class Main {
         Box tank = new Box(300, 200, CharacterObjFactory.TANK_WIDTH, CharacterObjFactory.TANK_HEIGHT, 100, 100, 100, 0, 0);
         Box cruiser = new Box(500, 200, CharacterObjFactory.CRUISER_WIDTH, CharacterObjFactory.CRUISER_HEIGHT, 100, 100, 100, 0, 0);
 
-
-
         drawSquare(speedo);
         drawSquare(tank);
         drawSquare(cruiser);
@@ -299,6 +354,7 @@ public class Main {
 			character.addStrategy(new Slow());
 			counter = 0;
 
+			spaceshipSelectLabels.forEach(it -> guiFrame.getContainer().remove(it));
 			gamePhase = GamePhase.LIVE_MATCH;
         }
     }
@@ -357,6 +413,7 @@ public class Main {
 	private void closingOperations() {
 
 		connections.removeCharacter(ID);
+		guiRenderer.destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		System.exit(0);
