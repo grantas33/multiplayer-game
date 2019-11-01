@@ -7,6 +7,9 @@ public class SuperBullets extends CharacterDecorator {
 
     @Override
     public String customMake(String innerDecor) {
-        return innerDecor + "SuperBullets";
+        if (!innerDecor.contains("SuperBullets")) {
+            return innerDecor + "SuperBullets";
+        }
+        return innerDecor;
     }
 }

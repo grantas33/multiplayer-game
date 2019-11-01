@@ -10,6 +10,8 @@ import Command.CommandController;
 import Command.ICommand;
 import Command.SuperBulletsCommand;
 import Command.SuperSaiyanCommand;
+import Decorator.SuperBullets;
+import Decorator.SuperSaiyan;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
@@ -280,6 +282,8 @@ public class Main {
 						if (action == GLFW_PRESS) {
 							SuperBulletsCommand bulletsCommand = new SuperBulletsCommand(character);
 							decor = commandController.addCommandAndExecute(bulletsCommand);
+                            // decor = "";
+                            // decor = new SuperBullets(new SuperSaiyan(character)).make();
 						}
 					}
 					if (key == GLFW_KEY_3) {
@@ -429,6 +433,7 @@ public class Main {
 
 		character.newBullets = bullets;
 		character.decor = decor;
+		// System.out.println(decor);
 		connections.sendUpdatedVersion(character);
 		bullets.clear();
 	}

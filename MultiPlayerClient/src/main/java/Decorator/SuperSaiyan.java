@@ -7,6 +7,9 @@ public class SuperSaiyan extends CharacterDecorator {
 
     @Override
     public String customMake(String innerDecor) {
-        return innerDecor + "SuperSaiyan";
+        if (!innerDecor.contains("SuperSaiyan")) {
+            return innerDecor + "SuperSaiyan";
+        }
+        return innerDecor;
     }
 }
