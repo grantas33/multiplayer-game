@@ -12,5 +12,5 @@ public abstract class CharacterDecorator extends CharacterComponent {
         return customMake(this.innerComponent.make());
     }
 
-    public abstract String customMake(String innerDecorated);
+    public abstract String customMake(String innerDecor);
 }

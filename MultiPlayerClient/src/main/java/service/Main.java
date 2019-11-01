@@ -96,7 +96,7 @@ public class Main {
 	private int client_port_udp;
 	private int counter;
 	private PlayerSounds playerSounds;
-	private String decorated = "";
+	private String decor = "";
 	private CommandController commandController = new CommandController();
 
 	public Main(String ip, int portTcp, int portUdp){
@@ -197,7 +197,7 @@ public class Main {
 									pnx = -1;
 								}
 								playerSounds.getFire().play();
-								bullets.add(new Bullet(xmain, ymain, k, c, pnx, decorated));
+								bullets.add(new Bullet(xmain, ymain, k, c, pnx, decor));
 							}
 						}
 						break;
@@ -273,18 +273,18 @@ public class Main {
 					if (key == GLFW_KEY_1) {
 						if (action == GLFW_PRESS) {
 							SuperSaiyanCommand saiyanCommand = new SuperSaiyanCommand(character);
-							decorated = commandController.addCommandAndExecute(saiyanCommand);
+							decor = commandController.addCommandAndExecute(saiyanCommand);
 						}
 					}
 					if (key == GLFW_KEY_2) {
 						if (action == GLFW_PRESS) {
 							SuperBulletsCommand bulletsCommand = new SuperBulletsCommand(character);
-							decorated = commandController.addCommandAndExecute(bulletsCommand);
+							decor = commandController.addCommandAndExecute(bulletsCommand);
 						}
 					}
 					if (key == GLFW_KEY_3) {
 						if (action == GLFW_PRESS) {
-							decorated = commandController.Undo(decorated);
+							decor = commandController.Undo(decor);
 						}
 					}
 				}
@@ -428,7 +428,7 @@ public class Main {
 	public void sendCharacter() {
 
 		character.newBullets = bullets;
-		character.decorated = decorated;
+		character.decor = decor;
 		connections.sendUpdatedVersion(character);
 		bullets.clear();
 	}

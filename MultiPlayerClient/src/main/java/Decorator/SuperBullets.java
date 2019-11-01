@@ -6,7 +6,7 @@ public class SuperBullets extends CharacterDecorator {
     }
 
     @Override
-    public String customMake(String innerDecorated) {
-        return innerDecorated + "SuperBullets";
+    public String customMake(String innerDecor) {
+        return innerDecor + "SuperBullets";
     }
 }

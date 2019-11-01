@@ -15,19 +15,19 @@ public class Bullet implements Serializable{
 	public float k;
 	public float c;
 	public float pn;
-	public String decorated;
+	public String decor;
 	
 	public Bullet(){}
 
 	
 	public Bullet(float x, float y, float k, float c, float pn,
-				  int width, int height, String decorated){
+				  int width, int height, String decor){
 		this.x = x;
 		this.y = y;
 		this.k = k;
 		this.c = c;
 		this.pn = pn;
-		this.decorated = decorated;
+		this.decor = decor;
 	}
 
 	@Override
@@ -40,11 +40,11 @@ public class Bullet implements Serializable{
 				Float.compare(bullet.k, k) == 0 &&
 				Float.compare(bullet.c, c) == 0 &&
 				Float.compare(bullet.pn, pn) == 0 &&
-				bullet.decorated.equals(decorated);
+				bullet.decor.equals(decor);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(x, y, k, c, pn, decorated);
+		return Objects.hash(x, y, k, c, pn, decor);
 	}
 }

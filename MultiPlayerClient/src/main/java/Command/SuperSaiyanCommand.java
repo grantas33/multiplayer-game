@@ -16,7 +16,7 @@ public class SuperSaiyanCommand implements ICommand{
     }
 
     @Override
-    public String undo(String decorated) {
-        return decorated.replaceAll("SuperSaiyan", "");
+    public String undo(String decor) {
+        return decor.replaceAll("SuperSaiyan", "");
     }
 }

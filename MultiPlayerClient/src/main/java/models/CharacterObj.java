@@ -28,7 +28,7 @@ public class CharacterObj extends CharacterComponent implements Serializable {
     private Strategy strategy;
     private ArrayList<Strategy> strategies = new ArrayList<Strategy>();
 
-    public String decorated = "";
+    public String decor = "";
 
     public CharacterObj() {
     }
@@ -61,6 +61,6 @@ public class CharacterObj extends CharacterComponent implements Serializable {
 
     @Override
     public String make() {
-        return decorated;
+        return decor;
     }
 }

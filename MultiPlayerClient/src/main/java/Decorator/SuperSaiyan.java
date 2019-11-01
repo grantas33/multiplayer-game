@@ -6,7 +6,7 @@ public class SuperSaiyan extends CharacterDecorator {
     }
 
     @Override
-    public String customMake(String innerDecorated) {
-        return innerDecorated + "SuperSaiyan";
+    public String customMake(String innerDecor) {
+        return innerDecor + "SuperSaiyan";
     }
 }

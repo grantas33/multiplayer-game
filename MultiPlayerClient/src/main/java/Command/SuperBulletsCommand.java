@@ -17,7 +17,7 @@ public class SuperBulletsCommand implements ICommand {
     }
 
     @Override
-    public String undo(String decorated) {
-        return decorated.replaceAll("SuperBullets", "");
+    public String undo(String decor) {
+        return decor.replaceAll("SuperBullets", "");
     }
 }

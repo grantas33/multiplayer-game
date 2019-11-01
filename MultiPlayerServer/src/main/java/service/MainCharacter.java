@@ -34,7 +34,7 @@ public class MainCharacter {
 
 	private PlayerSounds playerSounds;
 
-	private String decorated;
+	private String decor;
 
 
 	public void reduceHp(int reduce) {
@@ -86,8 +86,8 @@ public class MainCharacter {
 		
 		xVel = data.xVel;
 		yVel = data.yVel;
-		decorated = data.decorated;
-		if (decorated.contains("SuperSaiyan")) {
+		decor = data.decor;
+		if (decor.contains("SuperSaiyan")) {
 			Random randomFloat = new Random(System.currentTimeMillis());
 			this.r = randomFloat.nextFloat();
 			this.b = randomFloat.nextFloat();

@@ -12,11 +12,11 @@ public class CommandController {
         return cmd.execute();
     }
 
-    public String Undo(String decorated) {
+    public String Undo(String decore) {
         if (commands.size() != 0){
             ICommand cmd = commands.get(commands.size() - 1);
             commands.remove(cmd);
-            return cmd.undo(decorated);
+            return cmd.undo(decore);
         }
         return "";
     }

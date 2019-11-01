@@ -19,7 +19,7 @@ public class CharacterObj implements Serializable {
     public long id;
 
     public List<Bullet> newBullets;
-    public String decorated;
+    public String decor;
 
     public CharacterObj() {
     }
