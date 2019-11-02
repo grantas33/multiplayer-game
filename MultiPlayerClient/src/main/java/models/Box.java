@@ -20,6 +20,7 @@ public class Box{
 	public float b;
 	
 	public long id;
+	public String title;
 	
 	public Box(){}
 

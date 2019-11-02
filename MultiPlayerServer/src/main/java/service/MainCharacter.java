@@ -20,6 +20,7 @@ public class MainCharacter {
 	private int width;
 	private int height;
 	private SpaceshipType type;
+	private String nickname;
 	//Thread safe list because bullets can be updated while 
 	//iterating them which would resolve in an error.
 	private List<models.server.Bullet> bullets;
@@ -146,7 +147,7 @@ public class MainCharacter {
 				}
 				else{
 					boxes.add(new Box(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight(),
-							bullet.getR(), bullet.getG(), bullet.getB(), -1L, -1));
+							bullet.getR(), bullet.getG(), bullet.getB(), -1L, -1, null));
 				}
 			}
 		}
@@ -176,7 +177,7 @@ public class MainCharacter {
 			hp = fullHp;
 		}
 		
-		boxes.add(new Box(x, y, width, height, r, g, b, id, hp));
+		boxes.add(new Box(x, y, width, height, r, g, b, id, hp, nickname));
 		return boxes;
 	}
 
@@ -292,7 +293,15 @@ public class MainCharacter {
         this.yVel = yVel;
     }
 
-    @Override
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

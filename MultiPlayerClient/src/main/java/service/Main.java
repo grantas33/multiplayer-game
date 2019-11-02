@@ -7,11 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Command.CommandController;
-import Command.ICommand;
 import Command.SuperBulletsCommand;
 import Command.SuperSaiyanCommand;
-import Decorator.SuperBullets;
-import Decorator.SuperSaiyan;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
@@ -77,6 +74,7 @@ public class Main {
 
 	List<Label> spaceshipSelectLabels = new ArrayList<>();
 	TextInput nameInput;
+	List<Label> characterNicknames = new ArrayList<>();
 
 	private Frame guiFrame;
 	private Context guiContext;
@@ -377,7 +375,7 @@ public class Main {
         drawSquare(cruiser);
 
         if (selectedType != null) {
-        	character = CharacterObjFactory.createCharacterObj(selectedType, ID);
+        	character = CharacterObjFactory.createCharacterObj(selectedType, nameInput.getTextState().getText(), ID);
 
 			character.addStrategy(new Bolt());
 			character.addStrategy(new Runner());
@@ -412,12 +410,17 @@ public class Main {
 	public void render() {
 
 		glTranslatef(-camera.xmov, -camera.ymov, 0);	//camera's position
+		characterNicknames.forEach(it -> guiFrame.getContainer().remove(it));
+		characterNicknames = new ArrayList<>();
 
 		for (Box box : obstacles) {
 			drawSquare(box);
 		}
 		for (Box box : movingObjects) {
 			drawSquare(box);
+			if (box.title != null) {
+				drawBoxTitle(box);
+			}
 		}
 	}
 
@@ -431,6 +434,17 @@ public class Main {
 			GL11.glVertex2f(box.x + box.w, box.y + box.h);
 			GL11.glVertex2f(box.x, box.y + box.h);
 		GL11.glEnd();
+	}
+
+	private void drawBoxTitle(Box box) {
+
+		Label label = new Label(box.title, box.x - camera.x, box.y - camera.y, 100, 50);
+		float luminosity = 0.299f * box.r + 0.587f * box.g + 0.114f * box.b;
+		if (luminosity > 0.5f) {
+			label.getTextState().setTextColor(0, 0, 0, 1);
+		}
+		characterNicknames.add(label);
+		guiFrame.getContainer().add(label);
 	}
 
 	/** Function to send main characters data to server */

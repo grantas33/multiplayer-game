@@ -23,10 +23,11 @@ public class Box implements Serializable{
 	public float b;
 	
 	public long id;
+	public String title;
 	
 	public Box(){}
 	
-	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int xp) {
+	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int xp, String title) {
 		this.r = r;
 		this.b = b;
 		this.g = g;
@@ -38,6 +39,7 @@ public class Box implements Serializable{
 		
 		this.id= id;
 		this.xp = xp;
+		this.title = title;
 	}
 
 	

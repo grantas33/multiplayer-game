@@ -75,7 +75,7 @@ public class Main {
 			while(fileReader.hasNext()){
 				tiles.add(new Box(fileReader.nextInt(), fileReader.nextInt(),
 						fileReader.nextInt(), fileReader.nextInt(), 1f,
-						1f, 1f, -1L, -1));
+						1f, 1f, -1L, -1, null));
 			}
 			
 			Socket clientSocket;

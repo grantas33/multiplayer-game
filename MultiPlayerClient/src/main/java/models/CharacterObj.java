@@ -20,7 +20,7 @@ public class CharacterObj extends CharacterComponent implements Serializable {
     public int yVel;
 
     public SpaceshipType type;
-
+    public String nickname;
     public long id;
 
     public List<Bullet> newBullets;
@@ -34,10 +34,11 @@ public class CharacterObj extends CharacterComponent implements Serializable {
     }
 
     public CharacterObj(int xVel, int yVel,
-                        SpaceshipType type, long id) {
+                        SpaceshipType type, String nickname, long id) {
         this.xVel = xVel;
         this.yVel = yVel;
         this.type = type;
+        this.nickname = nickname;
         this.id = id;
     }
 

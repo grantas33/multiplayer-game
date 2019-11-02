@@ -47,6 +47,7 @@ public class CruiserBuilder implements CharacterBuilderInterface {
     @Override
     public void buildData(CharacterObj data) {
         mainCharacter.setId(data.id);
+        mainCharacter.setNickname(data.nickname);
         mainCharacter.setType(SpaceshipType.CRUISER);
         mainCharacter.setBullets(Collections.synchronizedList(new ArrayList<Bullet>()));
         mainCharacter.addBullets(data.newBullets);

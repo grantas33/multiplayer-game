@@ -18,17 +18,17 @@ public class CharacterObjFactory {
     public static final int CRUISER_HEIGHT = 150;
 
 
-    public static CharacterObj createCharacterObj(SpaceshipType type, long id) {
+    public static CharacterObj createCharacterObj(SpaceshipType type, String nickname, long id) {
         CharacterObj character;
         switch (type) {
             case SPEEDO:
-                character = new CharacterObj(0, 0, SPEEDO, id);
+                character = new CharacterObj(0, 0, SPEEDO, nickname, id);
                 break;
             case TANK:
-                character = new CharacterObj(0, 0, TANK, id);
+                character = new CharacterObj(0, 0, TANK, nickname, id);
                 break;
             case CRUISER:
-                character = new CharacterObj(0, 0, CRUISER, id);
+                character = new CharacterObj(0, 0, CRUISER, nickname, id);
                 break;
             default:
                 throw new InvalidParameterException("Spaceship type doesn't exist.");
