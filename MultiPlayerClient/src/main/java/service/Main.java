@@ -12,6 +12,7 @@ import Command.SuperSaiyanCommand;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
+import models.*;
 import org.joml.Vector2i;
 import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.animation.Animator;
@@ -32,9 +33,6 @@ import org.lwjgl.opengl.GL11;
 import sound.PlayerSounds;
 import strategy.Normal;
 
-import models.Box;
-import models.Bullet;
-import models.CharacterObj;
 import strategy.Bolt;
 import strategy.Runner;
 import strategy.Slow;
@@ -140,7 +138,6 @@ public class Main {
 			guiFrame.getContainer().add(it);
 		});
 		nameInput = new TextInput("Player1", 300, 50, 100, 20);
-		nameInput.setEditable(true);
 
 		guiFrame.getContainer().add(nameInput);
 		guiInitializer = new DefaultInitializer(window, guiFrame);
@@ -192,8 +189,8 @@ public class Main {
 								float xmouse = (float)cursorPos.x + camera.x;
 								float ymouse = DISPLAY_HEIGTH - (float)cursorPos.y + camera.y;
 								float pnx = 1;
-								float xmain = updatedCharacter.x + updatedCharacter.w / 2;
-								float ymain = updatedCharacter.y + updatedCharacter.h / 2;
+								float xmain = updatedCharacter.x + updatedCharacter.w / (float)2;
+								float ymain = updatedCharacter.y + updatedCharacter.h / (float)2;
 								float k = (ymain - ymouse) / (xmain - xmouse);
 								float c = ymain - k * xmain;
 
@@ -419,7 +416,8 @@ public class Main {
 		for (Box box : movingObjects) {
 			drawSquare(box);
 			if (box.title != null) {
-				drawBoxTitle(box);
+				Label label = drawColoredTitle(new ColorTitledBox(box));
+                characterNicknames.add(label);
 			}
 		}
 	}
@@ -436,15 +434,12 @@ public class Main {
 		GL11.glEnd();
 	}
 
-	private void drawBoxTitle(Box box) {
+	private Label drawColoredTitle(ColorTitledObject obj) {
 
-		Label label = new Label(box.title, box.x - camera.x, box.y - camera.y, 100, 50);
-		float luminosity = 0.299f * box.r + 0.587f * box.g + 0.114f * box.b;
-		if (luminosity > 0.5f) {
-			label.getTextState().setTextColor(0, 0, 0, 1);
-		}
-		characterNicknames.add(label);
+		Label label = new Label(obj.getTitle(), obj.getX() - camera.x, obj.getY() - camera.y, 100, 50);
+		label.getTextState().setTextColor(obj.getTextColor());
 		guiFrame.getContainer().add(label);
+		return label;
 	}
 
 	/** Function to send main characters data to server */
@@ -509,9 +504,9 @@ public class Main {
 		private void update(Box character) {
 
 			float xnew = character.x, ynew = character.y;
-			float xCam = Math.min(Math.max(0, (xnew + character.w / 2) - DISPLAY_WIDTH / 2),
+			float xCam = Math.min(Math.max(0, (xnew + character.w / (float) 2) - DISPLAY_WIDTH / (float) 2),
 					MAP_WIDTH - DISPLAY_WIDTH);
-			float yCam = Math.min(Math.max(0, (ynew + character.h / 2) - DISPLAY_HEIGTH / 2),
+			float yCam = Math.min(Math.max(0, (ynew + character.h / (float) 2) - DISPLAY_HEIGTH / (float) 2),
 					MAP_HEIGTH - DISPLAY_HEIGTH);
 
 			xmov = xCam - x;
