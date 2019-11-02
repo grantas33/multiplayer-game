@@ -43,4 +43,15 @@ public class Bullet implements Serializable{
 	public int hashCode() {
 		return Objects.hash(x, y, k, c, pn);
 	}
+
+	@Override
+	public String toString() {
+		return "Bullet{" +
+				"x=" + x +
+				", y=" + y +
+				", k=" + k +
+				", c=" + c +
+				", pn=" + pn +
+				'}';
+	}
 }

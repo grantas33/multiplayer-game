@@ -19,23 +19,25 @@ import models.ServerMessage;
 public class Helper {
 	
 	public static ServerMessage unmarshall(String data) throws JAXBException{
+
 		JAXBContext jc = JAXBContext.newInstance(ServerMessage.class);
 		
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		StringReader sr = new StringReader(data);
-		
+
 		return (ServerMessage) unmarshaller.unmarshal(sr);
 	}
 	
 	
 	public static String marshall(WrapperList wl) throws JAXBException {
+
 		JAXBContext jc = JAXBContext.newInstance(WrapperList.class);
         Marshaller marshaller = jc.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "utf-8");
         
         StringWriter sw = new StringWriter();
         marshaller.marshal(wl, sw);
-        
+
 		return sw.toString();
 	}
 	
@@ -57,6 +59,13 @@ public class Helper {
 		}
 		public void add(Box box) {
 			realList.add(box);
+		}
+
+		@Override
+		public String toString() {
+			return "WrapperList{" +
+					"realList=" + realList.toString() +
+					'}';
 		}
 	}
 }
