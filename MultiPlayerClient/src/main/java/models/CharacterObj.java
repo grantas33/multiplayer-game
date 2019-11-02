@@ -1,5 +1,6 @@
 package models;
 
+import Decorator.CharacterComponent;
 import enumerators.SpaceshipType;
 import strategy.Strategy;
 
@@ -13,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CharacterObj implements Serializable {
+public class CharacterObj extends CharacterComponent implements Serializable {
 
     public int xVel;
     public int yVel;
@@ -27,10 +28,13 @@ public class CharacterObj implements Serializable {
     private Strategy strategy;
     private ArrayList<Strategy> strategies = new ArrayList<Strategy>();
 
+    public String decor = "";
+
     public CharacterObj() {
     }
 
-    public CharacterObj(int xVel, int yVel, SpaceshipType type, long id) {
+    public CharacterObj(int xVel, int yVel,
+                        SpaceshipType type, long id) {
         this.xVel = xVel;
         this.yVel = yVel;
         this.type = type;
@@ -52,5 +56,11 @@ public class CharacterObj implements Serializable {
 
     public int speedIndicator() {
         return strategy.speedIndicator();
+    }
+
+
+    @Override
+    public String make() {
+        return decor;
     }
 }

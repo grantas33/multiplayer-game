@@ -34,6 +34,8 @@ public class MainCharacter {
 
 	private PlayerSounds playerSounds;
 
+	private String decor;
+
 
 	public void reduceHp(int reduce) {
 		hp -= reduce;
@@ -53,13 +55,13 @@ public class MainCharacter {
 	 */
 	public MainCharacter(int width, int height, int hp, long id, List<Bullet> newBullets) {
 		
-		x = 0;
-		y = 0;
-		
+		this.x = 0;
+		this.y = 0;
+
 		Random randomFloat = new Random(System.currentTimeMillis());
-		r = randomFloat.nextFloat();
-		b = randomFloat.nextFloat();
-		g = randomFloat.nextFloat();
+		this.r = randomFloat.nextFloat();
+		this.b = randomFloat.nextFloat();
+		this.g = randomFloat.nextFloat();
 
 		xVel = 0;
 		yVel = 0;
@@ -84,6 +86,13 @@ public class MainCharacter {
 		
 		xVel = data.xVel;
 		yVel = data.yVel;
+		decor = data.decor;
+		if (decor.contains("SuperSaiyan")) {
+			Random randomFloat = new Random(System.currentTimeMillis());
+			this.r = randomFloat.nextFloat();
+			this.b = randomFloat.nextFloat();
+			this.g = randomFloat.nextFloat();
+		}
 		addBullets(data.newBullets);
 	}	
 

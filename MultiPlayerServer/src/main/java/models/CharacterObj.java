@@ -11,21 +11,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CharacterObj implements Serializable{
+public class CharacterObj implements Serializable {
 
-	public int xVel;
-	public int yVel;
-	public SpaceshipType type;
-	public long id;
-	
-	public List<Bullet> newBullets;
-	
-	public CharacterObj(){}
+    public int xVel;
+    public int yVel;
+    public SpaceshipType type;
+    public long id;
 
-	public CharacterObj(int xVel, int yVel, SpaceshipType type, long id) {
-		this.xVel = xVel;
-		this.yVel = yVel;
-		this.type = type;
-		this.id = id;
-	}
+    public List<Bullet> newBullets;
+    public String decor;
+
+    public CharacterObj() {
+    }
+
+    public CharacterObj(int xVel, int yVel,
+                        SpaceshipType type, long id) {
+        this.xVel = xVel;
+        this.yVel = yVel;
+        this.type = type;
+        this.id = id;
+    }
 }

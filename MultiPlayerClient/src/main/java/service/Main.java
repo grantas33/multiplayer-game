@@ -6,6 +6,12 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import Command.CommandController;
+import Command.ICommand;
+import Command.SuperBulletsCommand;
+import Command.SuperSaiyanCommand;
+import Decorator.SuperBullets;
+import Decorator.SuperSaiyan;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
@@ -92,7 +98,9 @@ public class Main {
 	private int client_port_udp;
 	private int counter;
 	private PlayerSounds playerSounds;
-	
+	private String decor = "";
+	private CommandController commandController = new CommandController();
+
 	public Main(String ip, int portTcp, int portUdp){
 		server_ip = ip;
 		server_port_tcp = portTcp;
@@ -191,7 +199,7 @@ public class Main {
 									pnx = -1;
 								}
 								playerSounds.getFire().play();
-								bullets.add(new Bullet(xmain, ymain, k, c, pnx));
+								bullets.add(new Bullet(xmain, ymain, k, c, pnx, decor));
 							}
 						}
 						break;
@@ -255,13 +263,32 @@ public class Main {
 					}
 					if (key == GLFW_KEY_KP_ADD) {
 						if (action == GLFW_PRESS) {
-							if (counter == 2) {
+							if (counter == 3) {
 								counter = 0;
 							}
 							else {
 								counter++;
 							}
 							character.selectActiveStrategy(counter);
+						}
+					}
+					if (key == GLFW_KEY_1) {
+						if (action == GLFW_PRESS) {
+							SuperSaiyanCommand saiyanCommand = new SuperSaiyanCommand(character);
+							decor = commandController.addCommandAndExecute(saiyanCommand);
+						}
+					}
+					if (key == GLFW_KEY_2) {
+						if (action == GLFW_PRESS) {
+							SuperBulletsCommand bulletsCommand = new SuperBulletsCommand(character);
+							decor = commandController.addCommandAndExecute(bulletsCommand);
+                            // decor = "";
+                            // decor = new SuperBullets(new SuperSaiyan(character)).make();
+						}
+					}
+					if (key == GLFW_KEY_3) {
+						if (action == GLFW_PRESS) {
+							decor = commandController.Undo(decor);
 						}
 					}
 				}
@@ -405,6 +432,8 @@ public class Main {
 	public void sendCharacter() {
 
 		character.newBullets = bullets;
+		character.decor = decor;
+		// System.out.println(decor);
 		connections.sendUpdatedVersion(character);
 		bullets.clear();
 	}
