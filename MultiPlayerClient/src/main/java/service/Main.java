@@ -17,8 +17,10 @@ import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
 import org.joml.Vector2i;
 import org.liquidengine.legui.DefaultInitializer;
+import org.liquidengine.legui.animation.Animator;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.layout.LayoutManager;
@@ -62,6 +64,7 @@ public class Main {
 	static long ID = -1; // we get ID from the server side
 	long window;
 	DefaultInitializer guiInitializer;
+	Animator guiAnimator;
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 	private GLFWCursorPosCallback cursorPosCallback;
@@ -73,6 +76,7 @@ public class Main {
 	private boolean left = false;
 
 	List<Label> spaceshipSelectLabels = new ArrayList<>();
+	TextInput nameInput;
 
 	private Frame guiFrame;
 	private Context guiContext;
@@ -137,9 +141,14 @@ public class Main {
 			it.getTextState().setFontSize(30);
 			guiFrame.getContainer().add(it);
 		});
+		nameInput = new TextInput("Player1", 300, 50, 100, 20);
+		nameInput.setEditable(true);
+
+		guiFrame.getContainer().add(nameInput);
 		guiInitializer = new DefaultInitializer(window, guiFrame);
 		guiContext = guiInitializer.getContext();
 		guiRenderer = guiInitializer.getRenderer();
+		guiAnimator = Animator.getInstance();
 		guiRenderer.initialize();
 
 		glMatrixMode(GL_PROJECTION);
@@ -151,20 +160,15 @@ public class Main {
 	/** Setting up screen, establishing connections (TCP, UPD) with server, etc. */
 	public void init() {
 
-		//Setup the cursor pos callback.
-		glfwSetCursorPosCallback(window, (cursorPosCallback = new GLFWCursorPosCallback() {
-
+		guiInitializer.getCallbackKeeper().getChainCursorPosCallback().add(new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
 				cursorPos.x = xpos;
 				cursorPos.y = DISPLAY_HEIGTH - ypos;
 			}
+		});
 
-		}));
-
-
-		glfwSetMouseButtonCallback(window, (mouseButtonCallback = new GLFWMouseButtonCallback() {
-
+		guiInitializer.getCallbackKeeper().getChainMouseButtonCallback().add(new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int action, int mods) {
 				switch (gamePhase) {
@@ -207,11 +211,9 @@ public class Main {
 
 			}
 
-		}));
+		});
 
-
-		glfwSetKeyCallback(window, (keyCallback = new GLFWKeyCallback() {
-
+		guiInitializer.getCallbackKeeper().getChainKeyCallback().add(new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				if (character != null) {
@@ -282,8 +284,8 @@ public class Main {
 						if (action == GLFW_PRESS) {
 							SuperBulletsCommand bulletsCommand = new SuperBulletsCommand(character);
 							decor = commandController.addCommandAndExecute(bulletsCommand);
-                            // decor = "";
-                            // decor = new SuperBullets(new SuperSaiyan(character)).make();
+							// decor = "";
+							// decor = new SuperBullets(new SuperSaiyan(character)).make();
 						}
 					}
 					if (key == GLFW_KEY_3) {
@@ -294,7 +296,7 @@ public class Main {
 				}
 			}
 
-		}));
+		});
 
 		connections = new TcpConnection(server_ip, server_port_tcp);
 
@@ -343,6 +345,8 @@ public class Main {
 			glfwPollEvents();
 			glfwSwapBuffers(window);
 
+			guiAnimator.runAnimations();
+
 			// Now we need to handle events. Firstly we need to handle system events.
 			// And we need to know to which frame they should be passed.
 			guiInitializer.getSystemEventProcessor().processEvents(guiFrame, guiContext);
@@ -382,6 +386,7 @@ public class Main {
 			counter = 0;
 
 			spaceshipSelectLabels.forEach(it -> guiFrame.getContainer().remove(it));
+			guiFrame.getContainer().remove(nameInput);
 			gamePhase = GamePhase.LIVE_MATCH;
         }
     }
