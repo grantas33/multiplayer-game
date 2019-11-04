@@ -9,7 +9,7 @@ import models.Box;
 import models.Bullet;
 import models.CharacterObj;
 
-public class MainCharacter {
+public class MainCharacter implements Cloneable {
 
 	private float r;
 	private float g;
@@ -75,6 +75,16 @@ public class MainCharacter {
 		bullets = Collections.synchronizedList(new ArrayList<models.server.Bullet>());
 		addBullets(newBullets);
 		playerSounds = new PlayerSounds();
+	}
+
+	public MainCharacter clone() {
+		MainCharacter clone = null;
+		try {
+			clone = (MainCharacter) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
 	}
 	
 	/**

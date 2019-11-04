@@ -46,6 +46,8 @@ public class Main {
 
 	private MainCharacterFactory mcFactory;
 
+	private MainCharacter mainCharacterPrototype;
+
     public Vector<MainCharacter> getFullCharacters() {
         return fullCharacters;
     }
@@ -61,6 +63,7 @@ public class Main {
 		gamePlay = new Helper.WrapperList();
 		udpSend = UdpConnection.getInstance();
 		fullCharacters = new Vector<MainCharacter>();
+		mainCharacterPrototype = new MainCharacter();
 		this.mcFactory = mcFactory;
 	}
 
@@ -135,7 +138,8 @@ public class Main {
 			}
 		}
 		//if it is new character then we add it to the list
-		MainCharacter newMc = mcFactory.createMainCharacter(data);
+
+		MainCharacter newMc = mcFactory.createMainCharacter(data, mainCharacterPrototype.clone());
 		fullCharacters.add(newMc);
 	}
 	

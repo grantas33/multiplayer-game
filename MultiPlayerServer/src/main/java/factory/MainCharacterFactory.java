@@ -36,7 +36,7 @@ public class MainCharacterFactory {
         this.cruiserBuilder = cruiserBuilder;
     }
 
-    public MainCharacter createMainCharacter(CharacterObj data) {
+    public MainCharacter createMainCharacter(CharacterObj data, MainCharacter prototype) {
 
         CharacterBuilderInterface characterBuilder;
         switch (data.type) {
@@ -53,7 +53,7 @@ public class MainCharacterFactory {
                 throw new InvalidParameterException("Spaceship type doesn't exist.");
         }
 
-        characterBuilder.setMainCharacter(new MainCharacter());
+        characterBuilder.setMainCharacter(prototype);
 
         characterBuilder.buildDimensions();
         characterBuilder.buildHp();
