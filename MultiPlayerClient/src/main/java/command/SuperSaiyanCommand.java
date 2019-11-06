@@ -1,6 +1,6 @@
-package Command;
+package command;
 
-import Decorator.SuperSaiyan;
+import decorator.SuperSaiyan;
 import models.CharacterObj;
 
 public class SuperSaiyanCommand implements ICommand{
@@ -16,7 +16,7 @@ public class SuperSaiyanCommand implements ICommand{
     }
 
     @Override
-    public String undo(String decor) {
-        return decor.replaceAll("SuperSaiyan", "");
+    public String undo() {
+        return this.character.decor.replaceAll("SuperSaiyan", "");
     }
 }

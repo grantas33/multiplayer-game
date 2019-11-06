@@ -1,8 +1,8 @@
-package Command;
+package command;
 
 import java.util.ArrayList;
 
-public class CommandController {
+public class CommandInvoker {
     private ArrayList<ICommand> commands = new ArrayList<ICommand>();
 
     public String addCommandAndExecute(ICommand cmd) {
@@ -12,11 +12,11 @@ public class CommandController {
         return cmd.execute();
     }
 
-    public String Undo(String decor) {
+    public String undo() {
         if (commands.size() != 0){
             ICommand cmd = commands.get(commands.size() - 1);
             commands.remove(cmd);
-            return cmd.undo(decor);
+            return cmd.undo();
         }
         return "";
     }

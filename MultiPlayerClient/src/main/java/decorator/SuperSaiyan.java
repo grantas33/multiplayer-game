@@ -1,4 +1,4 @@
-package Decorator;
+package decorator;
 
 public class SuperSaiyan extends CharacterDecorator {
     public SuperSaiyan(CharacterComponent component) {

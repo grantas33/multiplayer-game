@@ -1,6 +1,6 @@
 package models;
 
-import Decorator.CharacterComponent;
+import decorator.CharacterComponent;
 import enumerators.SpaceshipType;
 import strategy.Strategy;
 

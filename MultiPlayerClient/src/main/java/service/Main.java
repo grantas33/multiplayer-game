@@ -6,9 +6,13 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import Command.CommandController;
-import Command.SuperBulletsCommand;
-import Command.SuperSaiyanCommand;
+import command.BigDamageBulletsCommand;
+import command.CommandInvoker;
+import command.BigBulletsCommand;
+import command.SuperSaiyanCommand;
+import decorator.BigBullets;
+import decorator.BigDamageBullets;
+import decorator.SuperSaiyan;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
@@ -99,7 +103,7 @@ public class Main {
 	private int counter;
 	private PlayerSounds playerSounds;
 	private String decor = "";
-	private CommandController commandController = new CommandController();
+	private CommandInvoker commandInvoker = new CommandInvoker();
 
 	public Main(String ip, int portTcp, int portUdp){
 		server_ip = ip;
@@ -272,20 +276,25 @@ public class Main {
 					if (key == GLFW_KEY_1) {
 						if (action == GLFW_PRESS) {
 							SuperSaiyanCommand saiyanCommand = new SuperSaiyanCommand(character);
-							decor = commandController.addCommandAndExecute(saiyanCommand);
+							decor = commandInvoker.addCommandAndExecute(saiyanCommand);
 						}
 					}
 					if (key == GLFW_KEY_2) {
 						if (action == GLFW_PRESS) {
-							SuperBulletsCommand bulletsCommand = new SuperBulletsCommand(character);
-							decor = commandController.addCommandAndExecute(bulletsCommand);
-							// decor = "";
-							// decor = new SuperBullets(new SuperSaiyan(character)).make();
+							BigBulletsCommand bigBulletsCommand = new BigBulletsCommand(character);
+							decor = commandInvoker.addCommandAndExecute(bigBulletsCommand);
+							//decor = new BigBullets(new BigDamageBullets(new SuperSaiyan(character))).make();
 						}
 					}
 					if (key == GLFW_KEY_3) {
 						if (action == GLFW_PRESS) {
-							decor = commandController.Undo(decor);
+							BigDamageBulletsCommand bigDamageBulletsCommand = new BigDamageBulletsCommand (character);
+							decor = commandInvoker.addCommandAndExecute(bigDamageBulletsCommand);
+						}
+					}
+					if (key == GLFW_KEY_4) {
+						if (action == GLFW_PRESS) {
+							decor = commandInvoker.undo();
 						}
 					}
 				}

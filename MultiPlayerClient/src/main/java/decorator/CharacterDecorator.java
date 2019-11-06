@@ -1,4 +1,4 @@
-package Decorator;
+package decorator;
 
 public abstract class CharacterDecorator extends CharacterComponent {
     private CharacterComponent innerComponent;
