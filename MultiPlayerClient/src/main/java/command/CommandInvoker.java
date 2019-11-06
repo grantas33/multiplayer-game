@@ -6,7 +6,7 @@ public class CommandInvoker {
     private ArrayList<ICommand> commands = new ArrayList<ICommand>();
 
     public String addCommandAndExecute(ICommand cmd) {
-        if (commands.size() < 2) {
+        if (commands.size() < 3) {
             commands.add(cmd);
         }
         return cmd.execute();
