@@ -1,3 +1,5 @@
+package service;
+
 import factory.CharacterObjFactory;
 import models.Box;
 import models.Bullet;
@@ -5,8 +7,6 @@ import models.CharacterObj;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.internal.util.reflection.Whitebox;
-import service.Main;
-import service.TcpConnection;
 
 import java.util.ArrayList;
 import java.util.Arrays;

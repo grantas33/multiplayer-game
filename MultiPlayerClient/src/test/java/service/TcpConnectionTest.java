@@ -1,10 +1,11 @@
+package service;
+
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
 import models.Box;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import service.TcpConnection;
 
 import java.io.*;
 import java.util.ArrayList;

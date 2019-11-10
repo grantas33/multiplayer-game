@@ -1,3 +1,5 @@
+package service;
+
 import enumerators.SpaceshipType;
 import models.Box;
 import models.CharacterObj;
@@ -5,7 +7,6 @@ import models.ServerMessage;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import service.Helper;
 
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
