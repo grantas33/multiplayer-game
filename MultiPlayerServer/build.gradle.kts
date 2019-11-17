@@ -9,7 +9,7 @@ tasks.register<JavaExec>("runServer") {
     group = "run"
     description = "run server with port 10000"
     classpath = sourceSets.main.get().runtimeClasspath
-    main = "Main"
+    main = "server.Main"
     args("10000")
 }
 

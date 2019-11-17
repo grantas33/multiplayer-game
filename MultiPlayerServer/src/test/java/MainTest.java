@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import factory.MainCharacterFactory;
-import models.CharacterObj;
-import service.Main;
-import service.MainCharacter;
+import server.factory.MainCharacterFactory;
+import server.models.CharacterObj;
+import server.service.Main;
+import server.service.MainCharacter;
 
 import java.util.Vector;
 

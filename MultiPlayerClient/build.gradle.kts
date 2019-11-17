@@ -11,7 +11,7 @@ tasks.register<JavaExec>("runClient") {
     group = "run"
     description = "run client in localhost with a random port"
     classpath = sourceSets.main.get().runtimeClasspath
-    main = "Main"
+    main = "client.Main"
     args("localhost", "10000", "-1")
 }
 
