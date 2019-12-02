@@ -2,6 +2,8 @@ package service;
 
 import java.util.*;
 
+import interfaces.Object2D;
+import iterator.CollidedBoxIterator;
 import sound.PlayerSounds;
 import enumerators.SpaceshipType;
 import facade.ServerBulletFacade;
@@ -9,7 +11,7 @@ import models.Box;
 import models.Bullet;
 import models.CharacterObj;
 
-public class MainCharacter implements Cloneable {
+public class MainCharacter implements Cloneable, Object2D {
 
 	private float r;
 	private float g;
@@ -173,12 +175,11 @@ public class MainCharacter implements Cloneable {
 		}
 		
 		//checking collision with obstacles
-		for (Box obs : tiles) {
-			if (LogicHelper.collision(x, y, x + width, y + height,
-					obs.x, obs.y, obs.x + obs.w, obs.y + obs.h)){
-				x -= xVel;
-				y -= yVel;
-			}
+		Iterator<Box> collidedBoxes = new CollidedBoxIterator(tiles, this);
+		while (collidedBoxes.hasNext()) {
+			collidedBoxes.next();
+			x -= xVel;
+			y -= yVel;
 		}
 		
 		//if hp is below 1 we reset player to its initial position

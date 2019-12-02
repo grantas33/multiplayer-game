@@ -1,10 +1,14 @@
 package models.server;
 
+import interfaces.Object2D;
+import iterator.CollidedBoxIterator;
+import iterator.OtherCharacterIterator;
 import service.LogicHelper;
 import service.Main;
 import service.MainCharacter;
 import models.Box;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
@@ -12,7 +16,7 @@ import java.util.Vector;
 /**
  * ServerBullet class represents bullets of main character
  */
-public class Bullet {
+public class Bullet implements Object2D {
 
     private float direc, speed; 		// y=kx+c going up or down
     private float k, c, x, y; 	// y=kx+c
@@ -61,12 +65,12 @@ public class Bullet {
         return c;
     }
 
-    public float getX() {
-        return x;
+    public int getX() {
+        return (int)x;
     }
 
-    public float getY() {
-        return y;
+    public int getY() {
+        return (int)y;
     }
 
     public int getWidth() {
@@ -128,17 +132,15 @@ public class Bullet {
         }
 
         //collision with tiles
-        for (Box obs : obstacles) {
-            if (LogicHelper.collision(x, y, x + width, y + height,
-                    obs.x, obs.y, obs.x + obs.w, obs.y + obs.h)) {
+        Iterator<Box> collidedBoxes = new CollidedBoxIterator(obstacles, this);
+        if (collidedBoxes.hasNext()) {
                 return true;
-            }
         }
-        // TODO mc non my id iterator
+
         //collision with enemies
-        for (MainCharacter mc : fullCharacters){
-            if (mc.getID() == currentChar.getID())
-                continue;
+        Iterator<MainCharacter> otherCharacters = new OtherCharacterIterator(fullCharacters, currentChar.getID());
+        while (otherCharacters.hasNext()) {
+            MainCharacter mc = otherCharacters.next();
             if (LogicHelper.collision(x, y, x + width, y + height,
                     mc.getX(), mc.getY(), mc.getX() + mc.getWidth(), mc.getY() + mc.getHeight())){
                 mc.reduceHp(damage);

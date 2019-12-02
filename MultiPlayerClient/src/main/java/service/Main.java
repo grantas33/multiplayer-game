@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import command.BigDamageBulletsCommand;
@@ -16,6 +17,7 @@ import decorator.SuperSaiyan;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
+import iterator.TitledBoxIterator;
 import models.*;
 import org.joml.Vector2i;
 import org.liquidengine.legui.DefaultInitializer;
@@ -417,19 +419,14 @@ public class Main {
 	public void render() {
 
 		glTranslatef(-camera.xmov, -camera.ymov, 0);	//camera's position
-		characterNicknames.forEach(it -> guiFrame.getContainer().remove(it));
-		characterNicknames = new ArrayList<>();
 
 		for (Box box : obstacles) {
 			drawSquare(box);
 		}
 		for (Box box : movingObjects) {
 			drawSquare(box);
-			if (box.title != null) {
-				Label label = drawColoredTitle(new ColorTitledBox(box));
-                characterNicknames.add(label);
-			}
 		}
+		drawTitles(movingObjects);
 		drawScores(movingObjects);
 	}
 
@@ -445,28 +442,40 @@ public class Main {
 		GL11.glEnd();
 	}
 
+	private void drawTitles(List<Box> ships) {
+        characterNicknames.forEach(it -> guiFrame.getContainer().remove(it));
+        characterNicknames = new ArrayList<>();
+
+        Iterator<Box> boxesWithTitle = new TitledBoxIterator(ships);
+        while (boxesWithTitle.hasNext()) {
+            Box box = boxesWithTitle.next();
+            Label label = drawColoredTitle(new ColorTitledBox(box));
+            guiFrame.getContainer().add(label);
+            characterNicknames.add(label);
+        }
+    }
+
+    private Label drawColoredTitle(ColorTitledObject obj) {
+
+        Label label = new Label(obj.getTitle(), obj.getX() - camera.x, obj.getY() - camera.y, 100, 50);
+        label.getTextState().setTextColor(obj.getTextColor());
+        return label;
+    }
+
 	private void drawScores(List<Box> ships) {
 
 		scores.forEach(it -> guiFrame.getContainer().remove(it));
 		scores = new ArrayList<>();
 		int y = 20;
-		for (Box box: ships) {
-			if (box.title != null) {
-				String scoreTitle = box.title + ": " + box.xp;
-				Label label = new Label(scoreTitle, DISPLAY_WIDTH - 100, y, 100, 20);
-				y += 20;
-				guiFrame.getContainer().add(label);
-				scores.add(label);
-			}
+        Iterator<Box> boxesWithTitle = new TitledBoxIterator(ships);
+        while (boxesWithTitle.hasNext()) {
+            Box box = boxesWithTitle.next();
+            String scoreTitle = box.title + ": " + box.xp;
+            Label label = new Label(scoreTitle, DISPLAY_WIDTH - 100, y, 100, 20);
+            y += 20;
+            guiFrame.getContainer().add(label);
+            scores.add(label);
 		}
-	}
-
-	private Label drawColoredTitle(ColorTitledObject obj) {
-
-		Label label = new Label(obj.getTitle(), obj.getX() - camera.x, obj.getY() - camera.y, 100, 50);
-		label.getTextState().setTextColor(obj.getTextColor());
-		guiFrame.getContainer().add(label);
-		return label;
 	}
 
 	/** Function to send main characters data to server */

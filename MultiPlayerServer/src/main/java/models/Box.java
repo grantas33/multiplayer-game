@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Box implements Serializable{
+public class Box implements Serializable {
 	
 	public float x;
 	public float y;
