@@ -1,7 +1,6 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,6 +15,7 @@ public class Box implements Serializable{
 	public int w;
 	public int h;
 	
+	public int hp;
 	public int xp;
 	
 	public float r;
@@ -27,7 +27,7 @@ public class Box implements Serializable{
 	
 	public Box(){}
 	
-	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int xp, String title) {
+	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int hp, int xp, String title) {
 		this.r = r;
 		this.b = b;
 		this.g = g;
@@ -38,6 +38,7 @@ public class Box implements Serializable{
 		this.h = height;
 		
 		this.id= id;
+		this.hp = hp;
 		this.xp = xp;
 		this.title = title;
 	}

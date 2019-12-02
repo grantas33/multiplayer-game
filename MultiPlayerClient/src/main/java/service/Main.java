@@ -77,6 +77,7 @@ public class Main {
 	List<Label> spaceshipSelectLabels = new ArrayList<>();
 	TextInput nameInput;
 	List<Label> characterNicknames = new ArrayList<>();
+	List<Label> scores = new ArrayList<>();
 
 	private Frame guiFrame;
 	private Context guiContext;
@@ -372,9 +373,9 @@ public class Main {
 	}
 
 	public void spaceshipSelectGamePhaseLoop() {
-        Box speedo = new Box(100, 200, CharacterObjFactory.SPEEDO_WIDTH, CharacterObjFactory.SPEEDO_HEIGHT, 255, 255, 255, 0, 0);
-        Box tank = new Box(300, 200, CharacterObjFactory.TANK_WIDTH, CharacterObjFactory.TANK_HEIGHT, 100, 100, 100, 0, 0);
-        Box cruiser = new Box(500, 200, CharacterObjFactory.CRUISER_WIDTH, CharacterObjFactory.CRUISER_HEIGHT, 100, 100, 100, 0, 0);
+        Box speedo = new Box(100, 200, CharacterObjFactory.SPEEDO_WIDTH, CharacterObjFactory.SPEEDO_HEIGHT, 255, 255, 255, 0, 0, 0);
+        Box tank = new Box(300, 200, CharacterObjFactory.TANK_WIDTH, CharacterObjFactory.TANK_HEIGHT, 100, 100, 100, 0, 0, 0);
+        Box cruiser = new Box(500, 200, CharacterObjFactory.CRUISER_WIDTH, CharacterObjFactory.CRUISER_HEIGHT, 100, 100, 100, 0, 0, 0);
 
         drawSquare(speedo);
         drawSquare(tank);
@@ -429,6 +430,7 @@ public class Main {
                 characterNicknames.add(label);
 			}
 		}
+		drawScores(movingObjects);
 	}
 
 	/** Function to draw square */
@@ -441,6 +443,22 @@ public class Main {
 			GL11.glVertex2f(box.x + box.w, box.y + box.h);
 			GL11.glVertex2f(box.x, box.y + box.h);
 		GL11.glEnd();
+	}
+
+	private void drawScores(List<Box> ships) {
+
+		scores.forEach(it -> guiFrame.getContainer().remove(it));
+		scores = new ArrayList<>();
+		int y = 20;
+		for (Box box: ships) {
+			if (box.title != null) {
+				String scoreTitle = box.title + ": " + box.xp;
+				Label label = new Label(scoreTitle, DISPLAY_WIDTH - 100, y, 100, 20);
+				y += 20;
+				guiFrame.getContainer().add(label);
+				scores.add(label);
+			}
+		}
 	}
 
 	private Label drawColoredTitle(ColorTitledObject obj) {

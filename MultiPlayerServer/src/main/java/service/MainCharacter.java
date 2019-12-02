@@ -32,6 +32,7 @@ public class MainCharacter implements Cloneable {
 
 	private int hp;
 	private int fullHp;
+	private int xp;
 
 	private PlayerSounds playerSounds;
 
@@ -152,12 +153,12 @@ public class MainCharacter implements Cloneable {
 			while (itr.hasNext()) {
 				
 				models.server.Bullet bullet = itr.next();
-				if (bullet.update(tiles, fullCharacters, id)) {
+				if (bullet.update(tiles, fullCharacters, this)) {
 					itr.remove();
 				}
 				else{
 					boxes.add(new Box(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight(),
-							bullet.getR(), bullet.getG(), bullet.getB(), -1L, -1, null));
+							bullet.getR(), bullet.getG(), bullet.getB(), -1L, -1, -1, null));
 				}
 			}
 		}
@@ -180,14 +181,14 @@ public class MainCharacter implements Cloneable {
 			}
 		}
 		
-		//if xp is below 1 we reset player to its initial position
+		//if hp is below 1 we reset player to its initial position
 		if (hp < 1){
 			playerSounds.getExplosion().play();
 			x = y = 0;
 			hp = fullHp;
 		}
 		
-		boxes.add(new Box(x, y, width, height, r, g, b, id, hp, nickname));
+		boxes.add(new Box(x, y, width, height, r, g, b, id, hp, xp, nickname));
 		return boxes;
 	}
 
@@ -309,6 +310,14 @@ public class MainCharacter implements Cloneable {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public int getXp() {
+		return xp;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
 	}
 
 	@Override

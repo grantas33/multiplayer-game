@@ -14,6 +14,7 @@ public class Box{
 	public int h;
 	
 	public int hp;
+	public int xp;
 	
 	public float r;
 	public float g;
@@ -24,7 +25,7 @@ public class Box{
 	
 	public Box(){}
 
-	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int hp) {
+	public Box(float x, float y, int width, int height, float r, float g, float b, long id, int hp, int xp) {
 		this.r = r;
 		this.b = b;
 		this.g = g;
@@ -36,6 +37,7 @@ public class Box{
 		
 		this.id= id;
 		this.hp = hp;
+		this.xp = xp;
 	}
 
 	@Override

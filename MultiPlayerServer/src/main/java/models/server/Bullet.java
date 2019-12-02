@@ -118,11 +118,10 @@ public class Bullet {
      * Updates bullets state.
      * @param obstacles		Simple square obstacles .
      * @param fullCharacters	All characters.
-     * @param id	Id of this character so we don't check collision with itself.
      * @return If there was a collision or bullet ran out of range returns true otherwise false.
      */
 
-    public boolean update(List<Box> obstacles, Vector<MainCharacter> fullCharacters, long id) {
+    public boolean update(List<Box> obstacles, Vector<MainCharacter> fullCharacters, MainCharacter currentChar) {
 
         if (range < 1) {
             return true;
@@ -135,13 +134,18 @@ public class Bullet {
                 return true;
             }
         }
+        // TODO mc non my id iterator
         //collision with enemies
         for (MainCharacter mc : fullCharacters){
-            if (mc.getID() == id)
+            if (mc.getID() == currentChar.getID())
                 continue;
             if (LogicHelper.collision(x, y, x + width, y + height,
                     mc.getX(), mc.getY(), mc.getX() + mc.getWidth(), mc.getY() + mc.getHeight())){
                 mc.reduceHp(damage);
+                if (mc.getHp() < 1) {
+                    currentChar.setXp(currentChar.getXp() + 100);
+                }
+
                 return true;
             }
         }
