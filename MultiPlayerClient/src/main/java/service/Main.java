@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import command.BigDamageBulletsCommand;
 import command.CommandInvoker;
@@ -17,6 +18,7 @@ import decorator.SuperSaiyan;
 import enumerators.GamePhase;
 import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
+import flyweight.BulletsHashMap;
 import iterator.TitledBoxIterator;
 import models.*;
 import org.joml.Vector2i;
@@ -61,6 +63,9 @@ public class Main {
 	private static final int MAP_HEIGTH = 900;
 
 	private static final int FRAMES_PER_SECOND = 30;
+
+	private static final double[] XS = {100, 200, 300, 400, 500, 600, 700};
+	private static final double[] YS = {100, 200, 300, 400, 500};
 
 	static long ID = -1; // we get ID from the server side
 	long window;
@@ -159,6 +164,42 @@ public class Main {
 		glMatrixMode(GL_MODELVIEW);
 	}
 
+	public Bullet constructBullet(double cursorX, double cursorY, boolean flyweight) {
+		float xmouse = (float) cursorX + camera.x;
+		float ymouse = DISPLAY_HEIGTH - (float) cursorY + camera.y;
+		float pnx = 1;
+		float xmain = updatedCharacter.x + updatedCharacter.w / (float) 2;
+		float ymain = updatedCharacter.y + updatedCharacter.h / (float) 2;
+		float k = (ymain - ymouse) / (xmain - xmouse);
+		float c = ymain - k * xmain;
+		if (xmouse > xmain) {
+			pnx = -1;
+		}
+
+		if (flyweight) {
+			return BulletsHashMap.getBullet(k, xmain, ymain, c, pnx, decor);
+
+		} else {
+			return new Bullet(xmain, ymain, k, c, pnx, decor);
+		}
+	}
+
+	public long executeBulletsExplosion(boolean flyweight) {
+		playerSounds.getFire().play();
+		long timeWasted = 0;
+		for (int i = 0; i < 18; i++) {
+			int rndXs = new Random().nextInt(XS.length);
+			int rndYs = new Random().nextInt(YS.length);
+			double cursorX = XS[rndXs];
+			double cursorY = YS[rndYs];
+			long startTime = System.nanoTime();
+			bullets.add(constructBullet(cursorX, cursorY, flyweight));
+			long endTime = System.nanoTime();
+			timeWasted += (endTime - startTime);
+		}
+		return timeWasted;
+	}
+
 	/** Setting up screen, establishing connections (TCP, UPD) with server, etc. */
 	public void init() {
 
@@ -193,19 +234,12 @@ public class Main {
 						if(button == 0) {
 							// new bullets shot
 							if(action == GLFW_PRESS && updatedCharacter != null) {
-								float xmouse = (float)cursorPos.x + camera.x;
-								float ymouse = DISPLAY_HEIGTH - (float)cursorPos.y + camera.y;
-								float pnx = 1;
-								float xmain = updatedCharacter.x + updatedCharacter.w / (float)2;
-								float ymain = updatedCharacter.y + updatedCharacter.h / (float)2;
-								float k = (ymain - ymouse) / (xmain - xmouse);
-								float c = ymain - k * xmain;
-
-								if (xmouse > xmain) {
-									pnx = -1;
-								}
+								double cursorX = cursorPos.x;
+								double cursorY = cursorPos.y;
+                                /*System.out.println(String.format("cursorX=%f, cursorY=%f",
+										cursorX, cursorY));*/
 								playerSounds.getFire().play();
-								bullets.add(new Bullet(xmain, ymain, k, c, pnx, decor));
+								bullets.add(constructBullet(cursorX, cursorY, false));
 							}
 						}
 						break;
@@ -298,6 +332,42 @@ public class Main {
 					if (key == GLFW_KEY_4) {
 						if (action == GLFW_PRESS) {
 							decor = commandInvoker.undo();
+						}
+					}
+					if (key == GLFW_KEY_G) {
+						if (action == GLFW_PRESS) {
+							//gPressed = true;
+							Runtime runtime = Runtime.getRuntime();
+							runtime.gc();
+							runtime.gc();
+							runtime.gc();
+
+							long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+
+							long timeWasted = executeBulletsExplosion(true);
+
+							long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+
+							System.out.println(String.format("Flyweight pattern. Time wasted = %d, Memory consumption = %d",
+									timeWasted / 1000, (usedMemoryAfter - usedMemoryBefore) / 100000));
+						}
+					}
+					if (key == GLFW_KEY_B) {
+						if (action == GLFW_PRESS) {
+							//bPressed = true;
+							Runtime runtime = Runtime.getRuntime();
+							runtime.gc();
+							runtime.gc();
+							runtime.gc();
+
+							long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+
+							long timeWasted = executeBulletsExplosion(false);
+
+							long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+
+							System.out.println(String.format("Not flyweight. Time wasted: %d, Memory consumption = %d",
+									timeWasted / 1000, (usedMemoryAfter - usedMemoryBefore) / 100000));
 						}
 					}
 				}
