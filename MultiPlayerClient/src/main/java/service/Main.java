@@ -20,6 +20,9 @@ import enumerators.SpaceshipType;
 import factory.CharacterObjFactory;
 import flyweight.BulletsHashMap;
 import iterator.TitledBoxIterator;
+import memento.Caretaker;
+import memento.Memento;
+import memento.Originator;
 import models.*;
 import org.joml.Vector2i;
 import org.liquidengine.legui.DefaultInitializer;
@@ -44,6 +47,8 @@ import strategy.Normal;
 import strategy.Bolt;
 import strategy.Runner;
 import strategy.Slow;
+
+import javax.management.OperationsException;
 
 /**
  * 
@@ -108,10 +113,18 @@ public class Main {
 	private String server_ip;
 	private int server_port_tcp;
 	private int client_port_udp;
-	private int counter;
+
 	private PlayerSounds playerSounds;
-	private String decor = "";
-	private CommandInvoker commandInvoker = new CommandInvoker();
+
+	private int counter;
+	private String decor;
+	private CommandInvoker commandInvoker;
+	private Caretaker caretaker;
+	private Originator originator;
+	private ArrayList<String> decors;
+	private int decorIndex;
+	private int mementoIndex;
+
 
 	public Main(String ip, int portTcp, int portUdp){
 		server_ip = ip;
@@ -299,7 +312,7 @@ public class Main {
 							}
 						}
 					}
-					if (key == GLFW_KEY_KP_ADD) {
+					if (key == GLFW_KEY_Q) {
 						if (action == GLFW_PRESS) {
 							if (counter == 3) {
 								counter = 0;
@@ -325,7 +338,7 @@ public class Main {
 					}
 					if (key == GLFW_KEY_3) {
 						if (action == GLFW_PRESS) {
-							BigDamageBulletsCommand bigDamageBulletsCommand = new BigDamageBulletsCommand (character);
+							BigDamageBulletsCommand bigDamageBulletsCommand = new BigDamageBulletsCommand(character);
 							decor = commandInvoker.addCommandAndExecute(bigDamageBulletsCommand);
 						}
 					}
@@ -368,6 +381,78 @@ public class Main {
 
 							System.out.println(String.format("Not flyweight. Time wasted: %d, Memory consumption = %d",
 									timeWasted / 1000, (usedMemoryAfter - usedMemoryBefore) / 100000));
+						}
+					}
+					// Memento UNDO
+					if (key == GLFW_KEY_KP_DIVIDE) {
+						if (action == GLFW_PRESS) {
+							if (caretaker.mementosCount() == 0) {
+								System.out.println("UNDO -> No mementos.");
+							} else if(mementoIndex == 0) {
+								System.out.println("UNDO -> decor = " + decor);
+							} else {
+								mementoIndex--;
+								Memento memento = caretaker.getMemento(mementoIndex);
+								originator.restoreDecor(memento);
+								decor = originator.getDecor();
+								System.out.println("UNDO -> decor = " + decor);
+							}
+						}
+					}
+					// Memento REDO
+					if (key == GLFW_KEY_KP_MULTIPLY) {
+						if (action == GLFW_PRESS) {
+							if (caretaker.mementosCount() == 0) {
+								System.out.println("REDO -> No mementos.");
+							} else if (mementoIndex == (caretaker.mementosCount() - 1)) {
+								System.out.println("REDO -> decor = " + decor);
+							} else {
+								mementoIndex++;
+								Memento memento = caretaker.getMemento(mementoIndex);
+								originator.restoreDecor(memento);
+								decor = originator.getDecor();
+								System.out.println("REDO -> decor = " + decor);
+							}
+						}
+					}
+					// Memento SAVE
+					if (key == GLFW_KEY_KP_ADD) {
+						if (action == GLFW_PRESS) {
+							if (decors.size() == caretaker.mementosCount()) {
+								System.out.println("All decors-mementos saved to caretaker!");
+							} else {
+								originator.setDecor(decors.get(decorIndex));
+								Memento memento = originator.saveDecorInMementoAndReturnMemento();
+								caretaker.addMemento(memento);
+								decorIndex++;
+								mementoIndex++;
+								decor = originator.getDecor();
+								System.out.println("SAVE -> decor saved = " + decor);
+							}
+						}
+					}
+					// Memento REMOVE
+					if (key == GLFW_KEY_KP_SUBTRACT) {
+						if (action == GLFW_PRESS) {
+							if (caretaker.mementosCount() == 0) {
+								System.out.println("All decors-mementos removed from caretaker!");
+							} else if (caretaker.mementosCount() == 1) {
+								caretaker.removeMemento(caretaker.mementosCount() - 1);
+								decorIndex--;
+								mementoIndex = -1;
+								decor = "";
+								System.out.println("All decors-mementos removed from caretaker!");
+							} else {
+								caretaker.removeMemento(caretaker.mementosCount() - 1);
+								decorIndex--;
+								if (mementoIndex > 0)
+									mementoIndex--;
+								Memento memento
+										= caretaker.getMemento(caretaker.mementosCount() - 1);
+								originator.restoreDecor(memento);
+								decor = originator.getDecor();
+								System.out.println("REMOVE -> current decor = " + decor);
+							}
 						}
 					}
 				}
@@ -465,6 +550,20 @@ public class Main {
 			spaceshipSelectLabels.forEach(it -> guiFrame.getContainer().remove(it));
 			guiFrame.getContainer().remove(nameInput);
 			gamePhase = GamePhase.LIVE_MATCH;
+
+			decor = "";
+			commandInvoker = new CommandInvoker();
+
+			caretaker = new Caretaker();
+			originator = new Originator();
+			decors = new ArrayList<String>();
+
+			decors.add(new BigBullets(character).make());
+			decors.add(new BigBullets(new BigDamageBullets(character)).make());
+			decors.add(new BigBullets(new BigDamageBullets(new SuperSaiyan(character))).make());
+
+			decorIndex = 0;
+			mementoIndex = -1;
         }
     }
 
