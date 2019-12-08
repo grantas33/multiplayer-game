@@ -1,6 +1,5 @@
-package models.composite;
+package interfaces;
 
-// Composite component interface
 public interface Object2D {
     int getX();
     int getY();

@@ -1,9 +1,9 @@
-package models.composite;
+package service;
 
 import java.util.*;
 
+import interfaces.Object2D;
 import iterator.CollidedBoxIterator;
-import service.Main;
 import sound.PlayerSounds;
 import enumerators.SpaceshipType;
 import facade.ServerBulletFacade;
@@ -11,7 +11,6 @@ import models.Box;
 import models.Bullet;
 import models.CharacterObj;
 
-// Composite class containing leafs(Bullets)
 public class MainCharacter implements Cloneable, Object2D {
 
 	private float r;
@@ -26,8 +25,7 @@ public class MainCharacter implements Cloneable, Object2D {
 	private String nickname;
 	//Thread safe list because bullets can be updated while 
 	//iterating them which would resolve in an error.
-
-	private List<models.composite.Bullet> bullets;
+	private List<models.server.Bullet> bullets;
 
 	private long id;
 
@@ -77,7 +75,7 @@ public class MainCharacter implements Cloneable, Object2D {
 		fullHp = hp;
 		this.id = id;
 
-		bullets = Collections.synchronizedList(new ArrayList<models.composite.Bullet>());
+		bullets = Collections.synchronizedList(new ArrayList<models.server.Bullet>());
 		addBullets(newBullets);
 		playerSounds = new PlayerSounds();
 	}
@@ -98,7 +96,7 @@ public class MainCharacter implements Cloneable, Object2D {
 	 * to simulate game.
 	 */
 	
-	public void updateState(CharacterObj data) {
+	void updateState(CharacterObj data) {
 		
 		xVel = data.xVel;
 		yVel = data.yVel;
@@ -136,10 +134,6 @@ public class MainCharacter implements Cloneable, Object2D {
 			}
 		}
 	}
-
-	public void removeBullet(Bullet bullet) {
-		bullets.remove(bullet);
-	}
 	
 	/**
 	 * This function updates character's and bullets' positions.d
@@ -150,17 +144,17 @@ public class MainCharacter implements Cloneable, Object2D {
 	 * only information necessary to render objects on the client side.
 	 */
 	
-	public List<Box> update(List<Box> tiles, Vector<MainCharacter> fullCharacters) {
+	List<Box> update(List<Box> tiles, Vector<MainCharacter> fullCharacters) {
 		
 		List<Box> boxes = new ArrayList<Box>();
 		
 		//updating bullets
 		synchronized (bullets) {
 			
-			Iterator<models.composite.Bullet> itr = bullets.listIterator();
+			Iterator<models.server.Bullet> itr = bullets.listIterator();
 			while (itr.hasNext()) {
 				
-				models.composite.Bullet bullet = itr.next();
+				models.server.Bullet bullet = itr.next();
 				if (bullet.update(tiles, fullCharacters, this)) {
 					itr.remove();
 				}
@@ -239,7 +233,7 @@ public class MainCharacter implements Cloneable, Object2D {
 		return b;
 	}
 
-	public List<models.composite.Bullet> getBullets() {
+	public List<models.server.Bullet> getBullets() {
 		return bullets;
 	}
 
@@ -279,7 +273,7 @@ public class MainCharacter implements Cloneable, Object2D {
 		this.height = height;
 	}
 
-	public void setBullets(List<models.composite.Bullet> bullets) {
+	public void setBullets(List<models.server.Bullet> bullets) {
 		this.bullets = bullets;
 	}
 

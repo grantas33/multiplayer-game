@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import models.composite.MainCharacter;
+import service.MainCharacter;
 import builder.CharacterBuilderInterface;
 import builder.CruiserBuilder;
 import builder.SpeedoBuilder;

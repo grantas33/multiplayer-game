@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import factory.MainCharacterFactory;
 import models.CharacterObj;
 import service.Main;
-import models.composite.MainCharacter;
+import service.MainCharacter;
 
 import java.util.Vector;
 

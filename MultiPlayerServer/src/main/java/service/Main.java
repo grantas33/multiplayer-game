@@ -1,10 +1,12 @@
 package service;
 
+import builder.CruiserBuilder;
+import builder.SpeedoBuilder;
+import builder.TankBuilder;
 import factory.MainCharacterFactory;
 import interfaces.ObserverInterface;
 import models.Box;
 import models.CharacterObj;
-import models.composite.MainCharacter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

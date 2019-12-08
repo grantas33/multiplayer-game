@@ -1,6 +1,6 @@
 package builder;
 
-import models.composite.MainCharacter;
+import service.MainCharacter;
 import models.CharacterObj;
 
 public interface CharacterBuilderInterface {

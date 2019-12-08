@@ -1,7 +1,5 @@
 package models.server;
 
-import models.composite.Bullet;
-
 public class SpeedoBullet extends Bullet {
     public SpeedoBullet(models.Bullet bullet, float r, float g, float b) {
         super(bullet, r, g, b);

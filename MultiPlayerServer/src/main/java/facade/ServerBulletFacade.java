@@ -1,6 +1,6 @@
 package facade;
 
-import models.composite.Bullet;
+import models.server.Bullet;
 import models.server.SpeedoBullet;
 import models.server.TankBullet;
 

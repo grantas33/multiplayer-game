@@ -1,7 +1,7 @@
 package models;
 
 
-import models.composite.Bullet;
+import models.server.Bullet;
 
 public class FastServerBullet extends Bullet {
     public FastServerBullet(models.Bullet bullet, float r, float g, float b) {

@@ -1,10 +1,10 @@
 package builder;
 
-import models.composite.MainCharacter;
+import service.MainCharacter;
 import enumerators.SpaceshipType;
 import factory.MainCharacterFactory;
 import models.CharacterObj;
-import models.composite.Bullet;
+import models.server.Bullet;
 
 import java.util.ArrayList;
 import java.util.Collections;
