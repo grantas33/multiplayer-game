@@ -49,6 +49,9 @@ import strategy.Normal;
 import strategy.Bolt;
 import strategy.Runner;
 import strategy.Slow;
+import template.CruiserBox;
+import template.SpeedoBox;
+import template.TankBox;
 
 /**
  * 
@@ -527,9 +530,9 @@ public class Main {
 	}
 
 	public void spaceshipSelectGamePhaseLoop() {
-        Box speedo = new Box(100, 200, CharacterObjFactory.SPEEDO_WIDTH, CharacterObjFactory.SPEEDO_HEIGHT, 255, 255, 255, 0, 0, 0);
-        Box tank = new Box(300, 200, CharacterObjFactory.TANK_WIDTH, CharacterObjFactory.TANK_HEIGHT, 100, 100, 100, 0, 0, 0);
-        Box cruiser = new Box(500, 200, CharacterObjFactory.CRUISER_WIDTH, CharacterObjFactory.CRUISER_HEIGHT, 100, 100, 100, 0, 0, 0);
+        Box speedo = (new SpeedoBox()).build();
+        Box tank = (new TankBox()).build();
+        Box cruiser = (new CruiserBox()).build();
 
         drawSquare(speedo);
         drawSquare(tank);
@@ -553,7 +556,7 @@ public class Main {
 
 			caretaker = new Caretaker();
 			originator = new Originator();
-			decors = new ArrayList<String>();
+			decors = new ArrayList<>();
 
 			decors.add(new BigBullets(character).make());
 			decors.add(new BigBullets(new BigDamageBullets(character)).make());

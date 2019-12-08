@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class UdpConnection implements SubjectInterface {
 
     DatagramSocket gamePlaySocket;
-    private CopyOnWriteArrayList<ObserverInterface> activeClients = new CopyOnWriteArrayList<ObserverInterface>();
+    private CopyOnWriteArrayList<ObserverInterface> activeClients = new CopyOnWriteArrayList<>();
 
     private static UdpConnection instance = null;
 
