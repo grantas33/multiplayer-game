@@ -1,6 +1,6 @@
 package iterator;
 
-import service.MainCharacter;
+import models.composite.MainCharacter;
 
 import java.util.Iterator;
 import java.util.List;

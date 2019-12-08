@@ -1,6 +1,6 @@
 package iterator;
 
-import interfaces.Object2D;
+import models.composite.Object2D;
 import models.Box;
 import service.LogicHelper;
 

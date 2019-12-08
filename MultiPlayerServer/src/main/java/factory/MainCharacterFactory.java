@@ -1,16 +1,10 @@
 package factory;
 
 import builder.CharacterBuilderInterface;
-import builder.CruiserBuilder;
-import builder.SpeedoBuilder;
-import builder.TankBuilder;
-import enumerators.SpaceshipType;
 import models.CharacterObj;
-import service.MainCharacter;
+import models.composite.MainCharacter;
 
 import java.security.InvalidParameterException;
-
-import static enumerators.SpaceshipType.*;
 
 public class MainCharacterFactory {
 

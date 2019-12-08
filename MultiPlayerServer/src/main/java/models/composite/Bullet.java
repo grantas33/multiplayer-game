@@ -1,11 +1,9 @@
-package models.server;
+package models.composite;
 
-import interfaces.Object2D;
 import iterator.CollidedBoxIterator;
 import iterator.OtherCharacterIterator;
 import service.LogicHelper;
 import service.Main;
-import service.MainCharacter;
 import models.Box;
 
 import java.util.Iterator;
@@ -13,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 
+// Composite leaf class
 /**
  * ServerBullet class represents bullets of main character
  */
