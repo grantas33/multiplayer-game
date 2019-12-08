@@ -1,8 +1,7 @@
 package command;
 
-import decorator.BigBullets;
 import decorator.BigDamageBullets;
-import models.CharacterObj;
+import models.gameObjectsComposite.CharacterObj;
 
 public class BigDamageBulletsCommand implements ICommand {
 

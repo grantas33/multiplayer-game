@@ -1,7 +1,7 @@
 package command;
 
 import decorator.SuperSaiyan;
-import models.CharacterObj;
+import models.gameObjectsComposite.CharacterObj;
 
 public class SuperSaiyanCommand implements ICommand{
     private CharacterObj character;

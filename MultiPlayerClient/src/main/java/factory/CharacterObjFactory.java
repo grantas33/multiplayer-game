@@ -1,7 +1,7 @@
 package factory;
 
 import enumerators.SpaceshipType;
-import models.CharacterObj;
+import models.gameObjectsComposite.CharacterObj;
 
 import java.security.InvalidParameterException;
 

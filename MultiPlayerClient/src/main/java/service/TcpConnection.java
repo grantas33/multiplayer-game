@@ -7,7 +7,7 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import models.Box;
-import models.CharacterObj;
+import models.gameObjectsComposite.CharacterObj;
 import models.ServerMessage;
 
 

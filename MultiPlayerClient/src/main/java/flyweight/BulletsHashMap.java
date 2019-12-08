@@ -1,6 +1,6 @@
 package flyweight;
 
-import models.Bullet;
+import models.gameObjectsComposite.Bullet;
 
 import java.util.HashMap;
 

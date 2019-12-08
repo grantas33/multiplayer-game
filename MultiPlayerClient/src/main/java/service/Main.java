@@ -24,6 +24,8 @@ import memento.Caretaker;
 import memento.Memento;
 import memento.Originator;
 import models.*;
+import models.gameObjectsComposite.Bullet;
+import models.gameObjectsComposite.CharacterObj;
 import org.joml.Vector2i;
 import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.animation.Animator;
@@ -47,8 +49,6 @@ import strategy.Normal;
 import strategy.Bolt;
 import strategy.Runner;
 import strategy.Slow;
-
-import javax.management.OperationsException;
 
 /**
  * 
@@ -98,11 +98,9 @@ public class Main {
 	private TcpConnection connections; // establishing TCP connection
 
 	private CharacterObj character; // data about the main character
-	private List<Bullet> bullets; // bullets shot in every frame, also to server
 
 	private List<Box> obstacles;
 	private List<Box> movingObjects; // all players and bullets. We get this from server
-	private Box updatedCharacter; // clients character that we get from server
 
   //  private UnicodeFont uf = null; // default font for rendering text
     private GamePhase gamePhase = GamePhase.SPACESHIP_SELECT; // current game phase
@@ -181,8 +179,8 @@ public class Main {
 		float xmouse = (float) cursorX + camera.x;
 		float ymouse = DISPLAY_HEIGTH - (float) cursorY + camera.y;
 		float pnx = 1;
-		float xmain = updatedCharacter.x + updatedCharacter.w / (float) 2;
-		float ymain = updatedCharacter.y + updatedCharacter.h / (float) 2;
+		float xmain = character.getX() + character.getWidth() / (float) 2;
+		float ymain = character.getY() + character.getHeight() / (float) 2;
 		float k = (ymain - ymouse) / (xmain - xmouse);
 		float c = ymain - k * xmain;
 		if (xmouse > xmain) {
@@ -206,7 +204,7 @@ public class Main {
 			double cursorX = XS[rndXs];
 			double cursorY = YS[rndYs];
 			long startTime = System.nanoTime();
-			bullets.add(constructBullet(cursorX, cursorY, flyweight));
+			character.addBullet(constructBullet(cursorX, cursorY, flyweight));
 			long endTime = System.nanoTime();
 			timeWasted += (endTime - startTime);
 		}
@@ -246,13 +244,13 @@ public class Main {
 					case LIVE_MATCH:
 						if(button == 0) {
 							// new bullets shot
-							if(action == GLFW_PRESS && updatedCharacter != null) {
+							if(action == GLFW_PRESS && character.isCharacterBoxInitialized()) {
 								double cursorX = cursorPos.x;
 								double cursorY = cursorPos.y;
                                 /*System.out.println(String.format("cursorX=%f, cursorY=%f",
 										cursorX, cursorY));*/
 								playerSounds.getFire().play();
-								bullets.add(constructBullet(cursorX, cursorY, false));
+								character.addBullet(constructBullet(cursorX, cursorY, false));
 							}
 						}
 						break;
@@ -468,7 +466,6 @@ public class Main {
 		
 		obstacles = connections.getMapDetails();
 
-		bullets = new ArrayList<Bullet>();
 		camera = new Camera(0, 0);
 		movingObjects = new ArrayList<Box>();
 
@@ -578,8 +575,8 @@ public class Main {
 	
 	/** Updating camera's position */
 	public void update() {
-		if (updatedCharacter != null) {
-			camera.update(updatedCharacter);
+		if (character.isCharacterBoxInitialized()) {
+			camera.update(character);
 		}
 	}
 
@@ -649,12 +646,9 @@ public class Main {
 
 	/** Function to send main characters data to server */
 	public void sendCharacter() {
-
-		character.newBullets = bullets;
 		character.decor = decor;
-		// System.out.println(decor);
 		connections.sendUpdatedVersion(character);
-		bullets.clear();
+		character.newBullets.clear();
 	}
 
 	/** Closing game */
@@ -673,11 +667,15 @@ public class Main {
 	 * @param objects Object can be either bullet or player
 	 */
 	public void updateListOfObjects(List<Box> objects) {
-		if (objects == null)	return;
+		if (objects == null)
+			return;
 		movingObjects = objects;
 		for (Box box : objects) {
 			if (box.id == ID) {
-				updatedCharacter = box;
+				character.x = box.x;
+				character.y = box.y;
+				character.h = box.h;
+				character.w = box.w;
 				break;
 			}
 		}
@@ -706,7 +704,7 @@ public class Main {
 			ymov = 0;
 		}
 
-		private void update(Box character) {
+		private void update(CharacterObj character) {
 
 			float xnew = character.x, ynew = character.y;
 			float xCam = Math.min(Math.max(0, (xnew + character.w / (float) 2) - DISPLAY_WIDTH / (float) 2),

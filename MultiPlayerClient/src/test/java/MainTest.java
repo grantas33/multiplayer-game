@@ -1,7 +1,7 @@
 import factory.CharacterObjFactory;
 import models.Box;
-import models.Bullet;
-import models.CharacterObj;
+import models.gameObjectsComposite.Bullet;
+import models.gameObjectsComposite.CharacterObj;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.internal.util.reflection.Whitebox;
