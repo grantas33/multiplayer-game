@@ -5,7 +5,7 @@ import models.ServerMessage;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import service.Helper;
+import service.MarshallerProxy;
 
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class HelperTest {
+class MarshallerProxyTest {
 
     private static ServerMessage generateServerMessage(int messageType, SpaceshipType spaceshipType, long id) {
         CharacterObj charData = new CharacterObj(100, 100, spaceshipType, id);
@@ -81,12 +81,12 @@ class HelperTest {
     @ParameterizedTest
     @MethodSource("serverMessageGenerator")
     void testMarshall(ServerMessage sm, String expected) throws JAXBException {
-        assertEquals(expected, Helper.marshall(sm));
+        assertEquals(expected, MarshallerProxy.marshall(sm));
     }
 
     @ParameterizedTest
     @MethodSource("receivedMessageGenerator")
     void testUnmarshall(String message, List<Box> expected) throws JAXBException {
-        assertArrayEquals(expected.toArray(), Helper.unmarshall(message).toArray());
+        assertArrayEquals(expected.toArray(), MarshallerProxy.unmarshall(message).toArray());
     }
 }

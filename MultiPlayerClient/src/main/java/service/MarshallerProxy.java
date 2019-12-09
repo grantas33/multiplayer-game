@@ -20,10 +20,10 @@ import models.ServerMessage;
  * 
  * @author Titas Skrebe
  *
- * service.Helper class for (un)marshalling data
+ * Proxy class for (un)marshalling data
  * 
  */
-public class Helper {
+public class MarshallerProxy {
 	
 	
 	/**

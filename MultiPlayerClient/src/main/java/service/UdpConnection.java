@@ -70,7 +70,7 @@ class UdpConnection implements Runnable {
 					}
 					List<Box> objects = null;
 					try {
-						objects = Helper.unmarshall(data);
+						objects = MarshallerProxy.unmarshall(data);
 					} catch (JAXBException e) {
 						e.printStackTrace();
 					}
