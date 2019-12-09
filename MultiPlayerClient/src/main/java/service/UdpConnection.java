@@ -25,6 +25,8 @@ class UdpConnection implements Runnable {
 		private DatagramSocket datagramSocket;
 		
 		private TcpConnection tcpConnection;
+
+		private MarshallerProxy marshallerProxy = new MarshallerProxy();
 		
 		//set udp port you want get game-play though. Make sure
 		//router port forwards it.
@@ -70,7 +72,7 @@ class UdpConnection implements Runnable {
 					}
 					List<Box> objects = null;
 					try {
-						objects = MarshallerProxy.unmarshall(data);
+						objects = marshallerProxy.unmarshall(data);
 					} catch (JAXBException e) {
 						e.printStackTrace();
 					}

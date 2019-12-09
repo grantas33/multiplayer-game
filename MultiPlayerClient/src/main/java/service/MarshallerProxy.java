@@ -24,7 +24,10 @@ import models.ServerMessage;
  * 
  */
 public class MarshallerProxy {
-	
+
+	private Marshaller marshaller = null;
+
+	private Unmarshaller unmarshaller = null;
 	
 	/**
 	 * Marshalls ServerMessage class to a string.
@@ -34,14 +37,17 @@ public class MarshallerProxy {
 	 * @throws JAXBException
 	 */
 	
-	public static String marshall(ServerMessage sm) throws JAXBException {
+	public String marshall(ServerMessage sm) throws JAXBException {
 		
 		JAXBContext jc = JAXBContext.newInstance(ServerMessage.class);
-        Marshaller marshaller = jc.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        if (this.marshaller == null) {
+			marshaller = jc.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+		}
         
         StringWriter sw = new StringWriter();
         marshaller.marshal(sm, sw);
+
         
 		return sw.toString();
 	}
@@ -54,10 +60,12 @@ public class MarshallerProxy {
 	 * @throws JAXBException
 	 */
 	
-	public static List<Box> unmarshall(String data) throws JAXBException{
+	public List<Box> unmarshall(String data) throws JAXBException{
 		JAXBContext jc = JAXBContext.newInstance(WrapperList.class);
 		
-		Unmarshaller unmarshaller = jc.createUnmarshaller();
+		if (unmarshaller == null) {
+			unmarshaller = jc.createUnmarshaller();
+		}
 		StringReader sr = new StringReader(data);
 		
 		WrapperList wrapList = (WrapperList) unmarshaller.unmarshal(sr);

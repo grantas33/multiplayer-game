@@ -27,6 +27,7 @@ public class TcpConnection {
 	private ObjectInput ois;
 	
 	private Socket socket;
+	private MarshallerProxy marshallerProxy = new MarshallerProxy();
 
 	TcpConnection(String ip, int port) {
 		
@@ -53,7 +54,7 @@ public class TcpConnection {
 		
 		try {
 			ServerMessage sm = new ServerMessage(GET_ID);
-			String data = MarshallerProxy.marshall(sm);
+			String data = marshallerProxy.marshall(sm);
 			oos.writeObject(data);
 			
 			return ois.readLong();
@@ -68,11 +69,11 @@ public class TcpConnection {
 		
 		try {
 			ServerMessage sm = new ServerMessage(GET_MAP);
-			String data = MarshallerProxy.marshall(sm);
+			String data = marshallerProxy.marshall(sm);
 			oos.writeObject(data);
 			
 			String response = (String) ois.readObject();
-			return MarshallerProxy.unmarshall(response);
+			return marshallerProxy.unmarshall(response);
 			
 		} catch (IOException | ClassNotFoundException | JAXBException e) {
 			e.printStackTrace();
@@ -85,7 +86,7 @@ public class TcpConnection {
 		try {
 			ServerMessage sm = new ServerMessage(SEND_MAIN_CHARACTER);
 			sm.setCharacterData(character);
-			String data = MarshallerProxy.marshall(sm);
+			String data = marshallerProxy.marshall(sm);
 			oos.writeObject(data);
 //			((ObjectOutputStream) oos).reset();
 		} catch (IOException | JAXBException e) {
@@ -99,7 +100,7 @@ public class TcpConnection {
 		try {
 			ServerMessage sm = new ServerMessage(GET_ID_IP_PORT);
 			sm.setPort(port);
-			String data = MarshallerProxy.marshall(sm);
+			String data = marshallerProxy.marshall(sm);
 			oos.writeObject(data);
 		} catch (IOException | JAXBException e) {
 			e.printStackTrace();
@@ -112,7 +113,7 @@ public class TcpConnection {
 		try {
 			ServerMessage sm = new ServerMessage(REMOVE_CHARACTER);
 			sm.setId(id);
-			String data = MarshallerProxy.marshall(sm);
+			String data = marshallerProxy.marshall(sm);
 			oos.writeObject(data);
 //			((ObjectOutputStream) oos).reset();
 		} catch (IOException | JAXBException e) {
