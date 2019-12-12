@@ -60,16 +60,15 @@ public class MarshallerProxy {
 	 * @throws JAXBException
 	 */
 	
-	public List<Box> unmarshall(String data) throws JAXBException{
+	public WrapperList unmarshall(String data) throws JAXBException{
 		JAXBContext jc = JAXBContext.newInstance(WrapperList.class);
 		
 		if (unmarshaller == null) {
 			unmarshaller = jc.createUnmarshaller();
 		}
 		StringReader sr = new StringReader(data);
-		
-		WrapperList wrapList = (WrapperList) unmarshaller.unmarshal(sr);
-		return wrapList.realList;
+
+		return (WrapperList) unmarshaller.unmarshal(sr);
 	}
 	
 	/**
@@ -81,6 +80,9 @@ public class MarshallerProxy {
 	public static class WrapperList{
 		
 		List<Box> realList;
+		int gamePhase;
+		int currentTimer;
+
 		public WrapperList(){}
 		
 	}

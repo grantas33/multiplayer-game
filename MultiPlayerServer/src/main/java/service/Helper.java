@@ -39,11 +39,12 @@ public class Helper {
 		return sw.toString();
 	}
 	
-	
 	@XmlRootElement
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class WrapperList{
 		List<Box> realList;
+		int gamePhase;
+		int currentTimer;
 		
 		public WrapperList(){
 			realList = new ArrayList<Box>();
@@ -58,5 +59,32 @@ public class Helper {
 		public void add(Box box) {
 			realList.add(box);
 		}
+
+		public int getGamePhase() {
+			return gamePhase;
+		}
+
+		public void setGamePhase(ServerGamePhase gamePhase) {
+			this.gamePhase = gamePhase.ordinal();
+		}
+
+		public int getCurrentTimer() {
+			return currentTimer;
+		}
+
+		public void setCurrentTimer(int currentTimer) {
+			this.currentTimer = currentTimer;
+		}
 	}
+}
+
+enum ServerGamePhase {
+	EMPTY_SERVER(0), LIVE_MATCH(30), END_SCORES(10);
+
+	final int duration;
+
+	ServerGamePhase(int duration) {
+		this.duration = duration;
+	}
+
 }

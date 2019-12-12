@@ -73,7 +73,7 @@ public class TcpConnection {
 			oos.writeObject(data);
 			
 			String response = (String) ois.readObject();
-			return marshallerProxy.unmarshall(response);
+			return marshallerProxy.unmarshall(response).realList;
 			
 		} catch (IOException | ClassNotFoundException | JAXBException e) {
 			e.printStackTrace();

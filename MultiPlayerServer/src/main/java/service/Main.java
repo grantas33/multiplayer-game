@@ -1,8 +1,5 @@
 package service;
 
-import builder.CruiserBuilder;
-import builder.SpeedoBuilder;
-import builder.TankBuilder;
 import factory.MainCharacterFactory;
 import interfaces.ObserverInterface;
 import models.Box;
@@ -15,11 +12,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
+import java.util.*;
 
 
 public class Main {
@@ -34,6 +27,11 @@ public class Main {
 	private static int SERVER_PORT_TCP;
 	
 	private static long IDs = 0L;
+
+	private ServerGamePhase currentGamePhase = ServerGamePhase.EMPTY_SERVER;
+	private int currentTimer = ServerGamePhase.EMPTY_SERVER.duration;
+	private int currentPlayerCount = 0;
+
 	
 	//thread safe array because while one thread is reading another
 	//might add delete some entries
@@ -98,11 +96,52 @@ public class Main {
 		
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
+
+			int clock = 0;
 			
 			@Override
 			public void run() {
 				updateGamePlay();
+				updateGameTimer();
 				udpSend.sendGamePlay(gamePlay);
+			}
+
+			private void updateGameTimer() {
+				if (currentPlayerCount == 0 && fullCharacters.size() > 0) {
+					currentGamePhase = ServerGamePhase.LIVE_MATCH;
+					currentTimer = ServerGamePhase.LIVE_MATCH.duration;
+				} else if (currentPlayerCount > 0 && fullCharacters.size() == 0) {
+					currentGamePhase = ServerGamePhase.EMPTY_SERVER;
+				}
+				currentPlayerCount = fullCharacters.size();
+
+				if (clock % 33 == 0) {
+					currentTimer--;
+					clock = 1;
+				} else {
+					clock++;
+				}
+
+				if (currentTimer <= 0) {
+					switch (currentGamePhase) {
+						case LIVE_MATCH:
+							currentGamePhase = ServerGamePhase.END_SCORES;
+							currentTimer = ServerGamePhase.END_SCORES.duration;
+							break;
+						case END_SCORES:
+							currentGamePhase = ServerGamePhase.LIVE_MATCH;
+							currentTimer = ServerGamePhase.LIVE_MATCH.duration;
+							for (MainCharacter mc : fullCharacters){
+								mc.setX(0);
+								mc.setY(0);
+								mc.setXp(0);
+								mc.setBullets(new ArrayList<>());
+							}
+							break;
+					}
+				}
+				gamePlay.setGamePhase(currentGamePhase);
+				gamePlay.setCurrentTimer(currentTimer);
 			}
 
 			private void updateGamePlay() {

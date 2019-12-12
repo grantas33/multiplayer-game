@@ -67,16 +67,16 @@ class UdpConnection implements Runnable {
 						data = (String) ois.readObject();
 						// System.err.println(data);
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						// e1.printStackTrace();
 						continue;
 					}
-					List<Box> objects = null;
+					MarshallerProxy.WrapperList wrapperList = null;
 					try {
-						objects = marshallerProxy.unmarshall(data);
+						wrapperList = marshallerProxy.unmarshall(data);
 					} catch (JAXBException e) {
 						e.printStackTrace();
 					}
-					main.updateListOfObjects(objects);
+					main.updateListOfObjects(wrapperList);
 					packet.setData(buffer);
 					packet.setLength(buffer.length);
 				}

@@ -93,6 +93,8 @@ public class Main {
 	TextInput nameInput;
 	List<Label> characterNicknames = new ArrayList<>();
 	List<Label> scores = new ArrayList<>();
+	Label serverTimerLabel;
+	private boolean endScoresFrozen = false;
 
 	private Frame guiFrame;
 	private Context guiContext;
@@ -104,6 +106,7 @@ public class Main {
 
 	private List<Box> obstacles;
 	private List<Box> movingObjects; // all players and bullets. We get this from server
+	private int serverTimer;
 
   //  private UnicodeFont uf = null; // default font for rendering text
     private GamePhase gamePhase = GamePhase.SPACESHIP_SELECT; // current game phase
@@ -125,7 +128,6 @@ public class Main {
 	private ArrayList<String> decors;
 	private int decorIndex;
 	private int mementoIndex;
-
 
 	public Main(String ip, int portTcp, int portUdp){
 		server_ip = ip;
@@ -498,8 +500,13 @@ public class Main {
             switch (gamePhase) {
                 case SPACESHIP_SELECT:
                     spaceshipSelectGamePhaseLoop();
+                    break;
                 case LIVE_MATCH:
                     liveMatchGamePhaseLoop();
+                    break;
+				case END_SCORES:
+					endScoresGamePhaseLoop();
+					break;
             }
 
 			guiRenderer.render(guiFrame, guiContext);
@@ -575,6 +582,13 @@ public class Main {
         }
     }
 
+	public void endScoresGamePhaseLoop() {
+		if (character != null) {
+			sendCharacter();
+			renderEndScores();
+		}
+	}
+
 	
 	/** Updating camera's position */
 	public void update() {
@@ -597,6 +611,42 @@ public class Main {
 		}
 		drawTitles(movingObjects);
 		drawScores(movingObjects);
+		drawTimer();
+	}
+
+	private void renderEndScores() {
+
+		if (!endScoresFrozen) {
+			characterNicknames.forEach(it -> guiFrame.getContainer().remove(it));
+
+			scores.forEach(it -> guiFrame.getContainer().remove(it));
+			scores = new ArrayList<>();
+			int y = 150;
+			Iterator<Box> boxesWithTitle = new TitledBoxIterator(movingObjects);
+			String winnerTitle = "No one";
+			int maxXp = -1;
+			while (boxesWithTitle.hasNext()) {
+				Box box = boxesWithTitle.next();
+				String scoreTitle = box.title + ": " + box.xp;
+				Label label = new Label(scoreTitle, DISPLAY_WIDTH/2, y, 100, 50);
+				label.getTextState().setFontSize(40);
+				y += 50;
+				guiFrame.getContainer().add(label);
+				scores.add(label);
+
+				if (box.xp > maxXp) {
+					winnerTitle = box.title;
+				}
+			}
+
+			Label label = new Label(winnerTitle + " has won this round.", 50, 50, 100, 50);
+			label.getTextState().setFontSize(50);
+			guiFrame.getContainer().add(label);
+			scores.add(label);
+		}
+
+		endScoresFrozen = true;
+		drawTimer();
 	}
 
 	/** Function to draw square */
@@ -647,6 +697,14 @@ public class Main {
 		}
 	}
 
+	private void drawTimer() {
+		guiFrame.getContainer().remove(serverTimerLabel);
+		serverTimerLabel = new Label(Integer.toString(serverTimer), DISPLAY_WIDTH/2, 10, 50, 30);
+		serverTimerLabel.getTextState().setFontSize(40);
+		serverTimerLabel.getTextState().setTextColor(ColorConstants.green());
+		guiFrame.getContainer().add(serverTimerLabel);
+	}
+
 	/** Function to send main characters data to server */
 	public void sendCharacter() {
 		character.decor = decor;
@@ -666,14 +724,12 @@ public class Main {
 
 	/**
 	 * Getting info about game play
-	 * 
-	 * @param objects Object can be either bullet or player
-	 */
-	public void updateListOfObjects(List<Box> objects) {
-		if (objects == null)
+	*/
+	public void updateListOfObjects(MarshallerProxy.WrapperList wrapperList) {
+		if (wrapperList.realList == null)
 			return;
-		movingObjects = objects;
-		for (Box box : objects) {
+		movingObjects = wrapperList.realList;
+		for (Box box : wrapperList.realList ) {
 			if (box.id == ID) {
 				character.x = box.x;
 				character.y = box.y;
@@ -682,6 +738,19 @@ public class Main {
 				break;
 			}
 		}
+		switch (wrapperList.gamePhase) {
+			case 0: break;
+			case 1: if (character != null) {
+				gamePhase = GamePhase.LIVE_MATCH;
+				endScoresFrozen = false;
+			}
+			break;
+			case 2: if (character != null) {
+			    gamePhase = GamePhase.END_SCORES;
+            }
+            break;
+		}
+		serverTimer = wrapperList.currentTimer;
 	}
 
 	public static class CursorPos {
