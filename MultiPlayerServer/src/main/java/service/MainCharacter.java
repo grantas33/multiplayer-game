@@ -46,7 +46,7 @@ public class MainCharacter implements Cloneable, Object2D {
 	}
 
 	public MainCharacter() {
-		playerSounds = new PlayerSounds();
+		// playerSounds = new PlayerSounds();
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class MainCharacter implements Cloneable, Object2D {
 
 		bullets = Collections.synchronizedList(new ArrayList<models.server.Bullet>());
 		addBullets(newBullets);
-		playerSounds = new PlayerSounds();
+		// playerSounds = new PlayerSounds();
 	}
 
 	public MainCharacter clone() {
@@ -184,7 +184,7 @@ public class MainCharacter implements Cloneable, Object2D {
 		
 		//if hp is below 1 we reset player to its initial position
 		if (hp < 1){
-			playerSounds.getExplosion().play();
+			// playerSounds.getExplosion().play();
 			x = y = 0;
 			hp = fullHp;
 		}

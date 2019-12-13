@@ -8,7 +8,7 @@ public class PlayerSounds {
     private SoundEffect explosion;
 
     public PlayerSounds() {
-        explosion = new SoundEffect(PlayerSounds.class.getClassLoader().getResource(SoundFile.EXPLOSION.getPath()).getFile());
+        // explosion = new SoundEffect(PlayerSounds.class.getClassLoader().getResource(SoundFile.EXPLOSION.getPath()).getFile());
     }
 
     public SoundEffect getExplosion() {
