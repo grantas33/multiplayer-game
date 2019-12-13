@@ -54,13 +54,12 @@ public class UdpConnection implements SubjectInterface {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(Helper.marshall(gamePlay));
-            byte [] bytes = baos.toByteArray();
+            byte[] bytes = baos.toByteArray();
             DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
 
             notifyObservers(packet);
-
         } catch (IOException | JAXBException e) {
-
+            e.printStackTrace();
         }
     }
 }
