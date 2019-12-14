@@ -70,7 +70,7 @@ public class Main {
 	private static final int MAP_WIDTH = 1500;
 	private static final int MAP_HEIGTH = 900;
 
-	private static final int FRAMES_PER_SECOND = 30;
+	private static final int FRAMES_PER_SECOND = 24;
 
 	private static final double[] XS = {100, 200, 300, 400, 500, 600, 700};
 	private static final double[] YS = {100, 200, 300, 400, 500};

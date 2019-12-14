@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import models.Box;
 import models.gameObjectsComposite.CharacterObj;
 import models.ServerMessage;
+import visitor.ServerMessagePrinter;
 
 
 public class TcpConnection {
@@ -86,6 +87,12 @@ public class TcpConnection {
 		try {
 			ServerMessage sm = new ServerMessage(SEND_MAIN_CHARACTER);
 			sm.setCharacterData(character);
+
+//			StringBuilder sb = new StringBuilder();
+//			ServerMessagePrinter printer = new ServerMessagePrinter(sb);
+//			sm.accept(printer);
+//			System.out.println(sb);
+
 			String data = marshallerProxy.marshall(sm);
 			oos.writeObject(data);
 //			((ObjectOutputStream) oos).reset();

@@ -1,5 +1,8 @@
 package models.gameObjectsComposite;
 
+import visitor.AcceptsServerMessageVisit;
+import visitor.ServerMessageVisitor;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -56,5 +59,10 @@ public class Bullet extends XmlAdapter<Bullet, GameObject> implements GameObject
     @Override
     public int getHeight() {
         return 0;
+    }
+
+    @Override
+    public void accept(ServerMessageVisitor visitor) {
+        visitor.visit(this);
     }
 }

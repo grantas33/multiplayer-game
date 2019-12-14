@@ -3,6 +3,8 @@ package models.gameObjectsComposite;
 import decorator.CharacterComponent;
 import enumerators.SpaceshipType;
 import strategy.Strategy;
+import visitor.AcceptsServerMessageVisit;
+import visitor.ServerMessageVisitor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -98,5 +100,10 @@ public class CharacterObj extends CharacterComponent implements GameObject, Seri
 
     public boolean isCharacterBoxInitialized() {
         return w != 0 && h != 0;
+    }
+
+    @Override
+    public void accept(ServerMessageVisitor visitor) {
+        visitor.visit(this);
     }
 }
