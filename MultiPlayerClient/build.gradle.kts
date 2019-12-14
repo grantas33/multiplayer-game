@@ -15,6 +15,15 @@ tasks.register<JavaExec>("runClient") {
     args("localhost", "10000", "-1")
 }
 
+tasks.register<JavaExec>("runClientAzure") {
+    group = "run"
+    description = "run client in public"
+    classpath = sourceSets.main.get().runtimeClasspath
+    main = "Main"
+    args("13.80.109.154", "10000", "15001")
+}
+
+
 val lwjglVersion = "3.2.3"
 
 val lwjglNatives = when (OperatingSystem.current()) {
