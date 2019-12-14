@@ -22,7 +22,7 @@ public class UdpConnection implements SubjectInterface {
     private UdpConnection() {
 
         try {
-            gamePlaySocket = new DatagramSocket();
+            gamePlaySocket = new DatagramSocket(15001);
         } catch (SocketException e) {
             e.printStackTrace();
         }

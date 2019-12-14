@@ -114,8 +114,8 @@ public class Main {
 
 	private Camera camera;
 	
-	private String server_ip;
-	private int server_port_tcp;
+	public String server_ip;
+	public int server_port_tcp;
 	private int client_port_udp;
 
 	private PlayerSounds playerSounds;

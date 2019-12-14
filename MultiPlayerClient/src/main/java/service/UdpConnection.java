@@ -1,16 +1,16 @@
 package service;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
 import models.Box;
+import models.ServerMessage;
 
 /**
 * This class establishes UDP connection with server and receives data about
@@ -53,9 +53,36 @@ class UdpConnection implements Runnable {
 				else{
 					datagramSocket = new DatagramSocket(UDP_PORT);
 				}
+
+				try {
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					ObjectOutputStream oos = null;
+					oos = new ObjectOutputStream(baos);
+
+					ServerMessage sm = new ServerMessage(datagramSocket.getLocalPort());
+					sm.setPort(datagramSocket.getLocalPort());
+					oos.writeObject(marshallerProxy.marshall(sm));
+					byte[] bytes = baos.toByteArray();
+					DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+
+					packet.setAddress(InetAddress.getByName(main.server_ip));
+					packet.setPort(15001);
+					try {
+						datagramSocket.send(packet);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} catch (IOException | JAXBException e) {
+					e.printStackTrace();
+				}
+
+
 				// send info about UDP to server
 				tcpConnection.sendIpIdPort(datagramSocket.getLocalPort());
 				System.err.println(datagramSocket.getLocalPort());
+
+
+
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				while (true) {
 
@@ -67,7 +94,7 @@ class UdpConnection implements Runnable {
 						data = (String) ois.readObject();
 						// System.err.println(data);
 					} catch (IOException e1) {
-						// e1.printStackTrace();
+						 e1.printStackTrace();
 						continue;
 					}
 					MarshallerProxy.WrapperList wrapperList = null;
