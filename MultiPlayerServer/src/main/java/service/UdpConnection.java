@@ -56,6 +56,7 @@ public class UdpConnection implements SubjectInterface {
             oos.writeObject(Helper.marshall(gamePlay));
             byte[] bytes = baos.toByteArray();
             DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+            System.out.println("sending packet of " + bytes.length + " bytes");
 
             notifyObservers(packet);
         } catch (IOException | JAXBException e) {

@@ -101,10 +101,18 @@ public class Main {
 			
 			@Override
 			public void run() {
-				updateGamePlay();
-				updateGameTimer();
-				udpSend.sendGamePlay(gamePlay);
-			}
+                updateGamePlay();
+                updateGameTimer();
+                udpSend.sendGamePlay(gamePlay);
+                System.out.println("characters size: " + fullCharacters.size());
+                try {
+                    System.out.print("coords: " + fullCharacters.firstElement().getX());
+                    System.out.print("coords: " + fullCharacters.firstElement().getY());
+                } catch (NoSuchElementException e) {
+                    System.out.println("no player");
+                }
+
+            }
 
 			private void updateGameTimer() {
 				if (currentPlayerCount == 0 && fullCharacters.size() > 0) {
