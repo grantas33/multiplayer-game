@@ -8,10 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import command.BigDamageBulletsCommand;
-import command.CommandInvoker;
-import command.BigBulletsCommand;
-import command.SuperSaiyanCommand;
+import chain.*;
+import command.*;
 import decorator.BigBullets;
 import decorator.BigDamageBullets;
 import decorator.SuperSaiyan;
@@ -26,6 +24,7 @@ import memento.Originator;
 import models.*;
 import models.gameObjectsComposite.Bullet;
 import models.gameObjectsComposite.CharacterObj;
+import org.apache.commons.lang3.ObjectUtils;
 import org.joml.Vector2i;
 import org.liquidengine.legui.DefaultInitializer;
 import org.liquidengine.legui.animation.Animator;
@@ -35,6 +34,7 @@ import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.layout.LayoutManager;
+import org.liquidengine.legui.system.renderer.IconRenderer;
 import org.liquidengine.legui.system.renderer.Renderer;
 import org.liquidengine.legui.theme.Themes;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -121,13 +121,14 @@ public class Main {
 	private PlayerSounds playerSounds;
 
 	private int counter;
-	private String decor;
+	public static String decor;
 	private CommandInvoker commandInvoker;
 	private Caretaker caretaker;
 	private Originator originator;
 	private ArrayList<String> decors;
 	private int decorIndex;
 	private int mementoIndex;
+	private Chain chain1;
 
 	public Main(String ip, int portTcp, int portUdp){
 		server_ip = ip;
@@ -328,26 +329,28 @@ public class Main {
 					}
 					if (key == GLFW_KEY_1) {
 						if (action == GLFW_PRESS) {
-							SuperSaiyanCommand saiyanCommand = new SuperSaiyanCommand(character);
-							decor = commandInvoker.addCommandAndExecute(saiyanCommand);
+							ICommand saiyanCommand = new SuperSaiyanCommand(character);
+							decor = chain1.calculateDecorAndReturn(saiyanCommand);
 						}
 					}
 					if (key == GLFW_KEY_2) {
 						if (action == GLFW_PRESS) {
-							BigBulletsCommand bigBulletsCommand = new BigBulletsCommand(character);
-							decor = commandInvoker.addCommandAndExecute(bigBulletsCommand);
+							ICommand bigBulletsCommand = new BigBulletsCommand(character);
+							decor = chain1.calculateDecorAndReturn(bigBulletsCommand);
 							//decor = new BigBullets(new BigDamageBullets(new SuperSaiyan(character))).make();
 						}
 					}
 					if (key == GLFW_KEY_3) {
 						if (action == GLFW_PRESS) {
-							BigDamageBulletsCommand bigDamageBulletsCommand = new BigDamageBulletsCommand(character);
-							decor = commandInvoker.addCommandAndExecute(bigDamageBulletsCommand);
+							ICommand bigDamageBulletsCommand = new BigDamageBulletsCommand(character);
+							decor = chain1.calculateDecorAndReturn(bigDamageBulletsCommand);
 						}
 					}
+					// UNDO commandInvoker
 					if (key == GLFW_KEY_4) {
 						if (action == GLFW_PRESS) {
-							decor = commandInvoker.undo();
+							ICommand undo = new UndoCommand();
+							decor = chain1.calculateDecorAndReturn(undo);
 						}
 					}
 					if (key == GLFW_KEY_G) {
@@ -571,6 +574,15 @@ public class Main {
 
 			decorIndex = 0;
 			mementoIndex = -1;
+
+			chain1 = new ShootBigDamageBullets(commandInvoker);
+			Chain chain2 = new BecomeSuperSaiyan(commandInvoker);
+			Chain chain3 = new ShootBigBullets(commandInvoker);
+			Chain chain4 = new Undo(commandInvoker);
+
+			chain1.setNextChain(chain2);
+			chain2.setNextChain(chain3);
+			chain3.setNextChain(chain4);
         }
     }
 
