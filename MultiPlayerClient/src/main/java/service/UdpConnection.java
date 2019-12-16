@@ -5,11 +5,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import models.Box;
+import mediator.TCPIOMediator;
 import models.ServerMessage;
 
 /**
@@ -26,7 +25,7 @@ class UdpConnection implements Runnable {
 		
 		private TcpConnection tcpConnection;
 
-		private MarshallerProxy marshallerProxy = new MarshallerProxy();
+		private MarshallerProxy marshallerProxy;
 		
 		//set udp port you want get game-play though. Make sure
 		//router port forwards it.
@@ -44,6 +43,7 @@ class UdpConnection implements Runnable {
 		/** Listens to server, reads sent data and passes it to main class */
 		@Override
 		public void run() {
+			TCPIOMediator mediator = new TCPIOMediator();
 
 			try {
 				if (UDP_PORT < 0 || UDP_PORT > 65535){
@@ -56,12 +56,15 @@ class UdpConnection implements Runnable {
 
 				try {
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					ObjectOutputStream oos = null;
-					oos = new ObjectOutputStream(baos);
+					OutputStream outputStream = new OutputStream(mediator, new ObjectOutputStream(baos));
+					marshallerProxy = new MarshallerProxy(mediator);
+					mediator.setOos(outputStream);
+					mediator.setMarshallerProxy(marshallerProxy);
 
 					ServerMessage sm = new ServerMessage(datagramSocket.getLocalPort());
 					sm.setPort(datagramSocket.getLocalPort());
-					oos.writeObject(marshallerProxy.marshall(sm));
+					marshallerProxy.sendServerMessage(sm);
+
 					byte[] bytes = baos.toByteArray();
 					DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
 
@@ -72,7 +75,7 @@ class UdpConnection implements Runnable {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				} catch (IOException | JAXBException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
@@ -90,9 +93,10 @@ class UdpConnection implements Runnable {
 					try {
 						datagramSocket.receive(packet);
 						ByteArrayInputStream bais = new ByteArrayInputStream(packet.getData());
-						ObjectInputStream ois = new ObjectInputStream(bais);
-						data = (String) ois.readObject();
-						// System.err.println(data);
+						InputStream inputStream = new InputStream(mediator, new ObjectInputStream(bais));
+						mediator.setOis(inputStream);
+
+						data = inputStream.receive();
 					} catch (IOException e1) {
 						 e1.printStackTrace();
 						continue;
@@ -108,7 +112,7 @@ class UdpConnection implements Runnable {
 					packet.setLength(buffer.length);
 				}
 
-			} catch ( ClassNotFoundException | SocketException e) {
+			} catch ( SocketException e) {
 				e.printStackTrace();
 			}
 

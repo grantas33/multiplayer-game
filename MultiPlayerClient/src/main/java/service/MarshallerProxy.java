@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import mediator.IOMediator;
+import mediator.MarshallerColleague;
 import models.Box;
 import models.ServerMessage;
 
@@ -23,11 +25,15 @@ import models.ServerMessage;
  * Proxy class for (un)marshalling data
  * 
  */
-public class MarshallerProxy {
+public class MarshallerProxy extends MarshallerColleague {
 
 	private Marshaller marshaller = null;
 
 	private Unmarshaller unmarshaller = null;
+
+	public MarshallerProxy(IOMediator mediator) {
+		super(mediator);
+	}
 	
 	/**
 	 * Marshalls ServerMessage class to a string.
@@ -70,7 +76,26 @@ public class MarshallerProxy {
 
 		return (WrapperList) unmarshaller.unmarshal(sr);
 	}
-	
+
+	@Override
+	public WrapperList receiveWrapperList() {
+		try {
+			return this.unmarshall(mediator.readInputResponse());
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void sendServerMessage(ServerMessage msg) {
+		try {
+			mediator.writeToOutput(this.marshall(msg));
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Wrapper class for marshalling/unmarshalling a list of boxes
 	 */
