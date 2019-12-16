@@ -1,23 +1,9 @@
 package sound;
 
 
-import java.io.*;
-import javax.sound.sampled.*;
-
-public class SoundEffect {
-
-    private Clip clip;
-
+public class SoundEffect extends AbstractSoundEffect {
     public SoundEffect(String soundFileName) {
-        try {
-            File soundFile = new File(soundFileName);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-            DataLine.Info info = new DataLine.Info(Clip.class, audioInputStream.getFormat());
-            clip = (Clip)AudioSystem.getLine(info);
-            clip.open(audioInputStream);
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
+        super(soundFileName);
     }
 
     public void play() {

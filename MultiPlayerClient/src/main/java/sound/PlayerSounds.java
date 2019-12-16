@@ -4,13 +4,21 @@ import enumerators.SoundFile;
 
 public class PlayerSounds {
 
-    private SoundEffect fire;
+    private AbstractSoundEffect fire;
 
     public PlayerSounds() {
-        fire = new SoundEffect(PlayerSounds.class.getClassLoader().getResource(SoundFile.SHOT.getPath()).getFile());
+        fire = initSoundEffect(SoundFile.SHOT.getPath());
     }
 
-    public SoundEffect getFire() {
+    private AbstractSoundEffect initSoundEffect(String path) {
+        try {
+           return new SoundEffect(PlayerSounds.class.getClassLoader().getResource(path).getFile());
+        } catch (NullPointerException e) {
+            return new NullSoundEffect(null);
+        }
+    }
+
+    public AbstractSoundEffect getFire() {
         return fire;
     }
 }
